@@ -5,8 +5,11 @@ type Config struct {
 }
 
 type PushUnit struct {
-	Id         string
-	Repository string
-	Key        string
-	Files      []string
+	Id             string
+	Repository     string
+	Key            string
+	Files          []string
+	Commit_Message string
+	Author_Name    string
+	Author_Email   string
 }

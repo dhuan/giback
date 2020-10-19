@@ -72,7 +72,7 @@ func runUnit(unit app.PushUnit, workspacePath string) error {
 		log.Fatal("Failed to add.")
 	}
 
-	err = git.Commit(repositoryPath, "some commit message", "fulano silva", "fulano.silva@example.com")
+	err = git.Commit(repositoryPath, unit.Commit_Message, unit.Author_Name, unit.Author_Email)
 
 	if err != nil {
 		log.Fatal("Failed to commit.", err)
