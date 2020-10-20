@@ -82,6 +82,20 @@ func ScanDir(path string) []string {
 	return filesFiltered
 }
 
+func ScanDirMany(pathList []string) []string {
+	var files []string
+
+	if len(pathList) == 0 {
+		return nil
+	}
+
+	files = ScanDir(pathList[0])
+
+	files = append(files, ScanDirMany(pathList[1:])...)
+
+	return files
+}
+
 func getGlobBasePath(pathGlob string) string {
 	split := strings.Split(pathGlob, "/")
 

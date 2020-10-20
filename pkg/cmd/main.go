@@ -54,7 +54,7 @@ func runUnit(unit app.PushUnit, workspacePath string) error {
 		git.Pull(repositoryPath)
 	}
 
-	files := gibackfs.ScanDir(unit.Files[0])
+	files := gibackfs.ScanDirMany(unit.Files)
 
 	gibackfs.Copy(files, repositoryPath)
 
