@@ -7,19 +7,11 @@ import (
 )
 
 func Run(dir string, command string, env map[string]string) ([]byte, error) {
-	fmt.Println("running a command")
-	fmt.Println(command)
-
 	commandName, commandParameters, err := parseCommand(command)
 
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println("command name")
-	fmt.Println(commandName)
-	fmt.Println("command parameters")
-	fmt.Println(commandParameters)
 
 	cmd := exec.Command(commandName, commandParameters...)
 
@@ -34,15 +26,8 @@ func Run(dir string, command string, env map[string]string) ([]byte, error) {
 	output, err := cmd.CombinedOutput()
 
 	if err != nil {
-		fmt.Println("error")
-		fmt.Printf("%s\n", output)
-
 		return nil, err
 	}
-
-	fmt.Println("success")
-
-	fmt.Printf("%s\n", output)
 
 	return output, nil
 }
