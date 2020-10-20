@@ -8,12 +8,8 @@ import (
 	"github.com/dhuan/giback/pkg/utils"
 )
 
-func CheckAccess(workspace string, keyPath string, repository string) bool {
+func CheckAccess(workspace string, repository string) bool {
 	if !gibackfs.FolderExists(workspace) {
-		return false
-	}
-
-	if !gibackfs.FileExists(keyPath) {
 		return false
 	}
 

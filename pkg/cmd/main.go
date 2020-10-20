@@ -36,7 +36,7 @@ func Main(c *cli.Context) error {
 func runUnit(unit app.PushUnit, workspacePath string) error {
 	var err error
 
-	hasAccess := git.CheckAccess(workspacePath, unit.Key, unit.Repository)
+	hasAccess := git.CheckAccess(workspacePath, unit.Repository)
 
 	repositoryPath := getRepositoryPath(workspacePath, unit)
 
