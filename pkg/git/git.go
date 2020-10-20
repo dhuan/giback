@@ -112,5 +112,5 @@ func Push(repositoryPath string) error {
 }
 
 type GitStatusResult struct {
-	file string
+	File string
 }

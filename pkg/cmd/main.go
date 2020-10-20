@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/dhuan/giback/pkg/app"
 	"github.com/dhuan/giback/pkg/gibackfs"
@@ -75,6 +76,10 @@ func runUnit(unit app.PushUnit, workspacePath string) error {
 		return nil
 	}
 
+	fileList := buildFileListFromStatusResult(statusResult)
+
+	log.Println(fmt.Sprintf("Files affected in the repository: %s", fileList))
+
 	err = git.AddAll(repositoryPath)
 
 	if err != nil {
@@ -110,4 +115,14 @@ func hasClonedRepository(workspace string, id string) bool {
 
 func getRepositoryPath(workspace string, unit app.PushUnit) string {
 	return workspace + "/" + unit.Id
+}
+
+func buildFileListFromStatusResult(statusResults []git.GitStatusResult) string {
+	var fileList []string
+
+	for i := range statusResults {
+		fileList = append(fileList, statusResults[i].File)
+	}
+
+	return strings.Join(fileList, ",")
 }
