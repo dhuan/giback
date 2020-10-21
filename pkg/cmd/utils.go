@@ -9,27 +9,7 @@ import (
 	"github.com/dhuan/giback/pkg/app"
 	"github.com/dhuan/giback/pkg/gibackfs"
 	"github.com/dhuan/giback/pkg/git"
-
-	"github.com/urfave/cli/v2"
 )
-
-func Main(c *cli.Context) error {
-	config, workspacePath, err := gibackfs.GetUserConfig()
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, unit := range config.Units {
-		runErr := runUnit(unit, workspacePath)
-
-		if runErr != nil {
-			log.Fatal(runErr)
-		}
-	}
-
-	return nil
-}
 
 func runUnit(unit app.PushUnit, workspacePath string) error {
 	var err error
