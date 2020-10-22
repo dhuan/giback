@@ -9,6 +9,7 @@ import (
 	"github.com/dhuan/giback/pkg/app"
 	"github.com/dhuan/giback/pkg/gibackfs"
 	"github.com/dhuan/giback/pkg/git"
+	"github.com/dhuan/giback/pkg/utils"
 )
 
 func runUnit(unit app.PushUnit, workspacePath string) error {
@@ -39,6 +40,10 @@ func runUnit(unit app.PushUnit, workspacePath string) error {
 	log.Println(fmt.Sprintf("Identifying files..."))
 
 	files := gibackfs.ScanDirMany(unit.Files)
+
+	if len(unit.Exclude) > 0 {
+		files = utils.FilterOut(files, unit.Exclude)
+	}
 
 	for i := range files {
 		log.Println(fmt.Sprintf("%s", files[i]))

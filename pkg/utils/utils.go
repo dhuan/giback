@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/csv"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -44,4 +45,26 @@ func SplitPreservingQuotes(s string) ([]string, error) {
 	}
 
 	return fields, nil
+}
+
+func FilterOut(files []string, patterns []string) []string {
+	if len(patterns) == 0 {
+		return files
+	}
+
+	var filesFiltered []string
+
+	pattern := patterns[0]
+
+	for i := range files {
+		file := files[i]
+
+		match, _ := filepath.Match(pattern, file)
+
+		if !match {
+			filesFiltered = append(filesFiltered, file)
+		}
+	}
+
+	return FilterOut(filesFiltered, patterns[1:])
 }
