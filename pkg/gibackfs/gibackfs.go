@@ -1,9 +1,7 @@
 package gibackfs
 
 import (
-	"fmt"
 	"os"
-	"os/user"
 	"path/filepath"
 	"strings"
 
@@ -13,14 +11,12 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func GetUserConfig() (app.Config, string, error) {
+func GetUserConfig(appContext app.Context) (app.Config, string, error) {
 	config := app.Config{}
 
-	userConfigFilePath, workspacePath, err := getUserConfigFilePath()
+	userConfigFilePath := appContext.ConfigFilePath
 
-	if err != nil {
-		return config, workspacePath, err
-	}
+	workspacePath := appContext.WorkspacePath
 
 	buffer, err := ioutil.ReadFile(userConfigFilePath)
 
@@ -134,18 +130,4 @@ func getFileNameFromFullPathFile(filePath string) string {
 	split := strings.Split(filePath, "/")
 
 	return split[len(split)-1]
-}
-
-func getUserConfigFilePath() (string, string, error) {
-	usr, err := user.Current()
-
-	if err != nil {
-		return "", "", err
-	}
-
-	configFilePath := fmt.Sprintf("%s/.giback.yml", usr.HomeDir)
-
-	workspacePath := fmt.Sprintf("%s/.giback", usr.HomeDir)
-
-	return configFilePath, workspacePath, nil
 }

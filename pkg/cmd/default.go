@@ -12,7 +12,13 @@ import (
 )
 
 func Default(c *cli.Context) error {
-	config, workspacePath, err := gibackfs.GetUserConfig()
+	appContext, err := app.BuildContext(c)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	config, workspacePath, err := gibackfs.GetUserConfig(appContext)
 
 	if err != nil {
 		log.Fatal(err)

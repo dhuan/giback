@@ -14,6 +14,18 @@ func main() {
 		Name:   "giback",
 		Usage:  "Easily backup any files to git repositories.",
 		Action: cmd.Default,
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "c",
+				Value: "",
+				Usage: "Path to a configuration file.",
+			},
+			&cli.StringFlag{
+				Name:  "w",
+				Value: "",
+				Usage: "Path to workspace.",
+			},
+		},
 		Commands: []*cli.Command{
 			{
 				Name:   "all",
