@@ -1,0 +1,10 @@
+units:
+- id: my_backup
+  repository: ssh://git@localhost:2222/srv/git/test.git
+  author_name: Super Man
+  author_email: superman@example.com
+  commit_message: 'Backing up!'
+  branch: master
+  files:
+  - "{PWD}/test/backup_files/*.txt"
+  exclude: []

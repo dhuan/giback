@@ -3,6 +3,7 @@ package shell
 import (
 	"fmt"
 	"github.com/dhuan/giback/pkg/utils"
+	"os"
 	"os/exec"
 )
 
@@ -19,6 +20,8 @@ func Run(dir string, command string, env map[string]string) ([]byte, error) {
 		cmd.Dir = dir
 	}
 
+	cmd.Env = os.Environ()
+
 	if len(env) > 0 {
 		applyEnv(cmd, env)
 	}
@@ -26,7 +29,7 @@ func Run(dir string, command string, env map[string]string) ([]byte, error) {
 	output, err := cmd.CombinedOutput()
 
 	if err != nil {
-		return nil, err
+		return output, err
 	}
 
 	return output, nil

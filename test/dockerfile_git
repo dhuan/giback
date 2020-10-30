@@ -1,0 +1,16 @@
+FROM debian:buster-20201012
+
+RUN apt update \
+  && apt install --yes git openssh-server \
+  && useradd -m git \
+  && mkdir /home/git/.ssh \
+  && chmod 700 /home/git/.ssh \
+  && touch /home/git/.ssh/authorized_keys \
+  && chmod 600 /home/git/.ssh/authorized_keys \
+  && chown -R git /home/git \
+  && mkdir /srv/git \
+  && chown git /srv/git \
+  && echo "Port 22\nAddressFamily any\nListenAddress 0.0.0.0" >> /etc/ssh/sshd_config
+
+
+CMD ["bash", "/giback_test/setup_container.sh"]

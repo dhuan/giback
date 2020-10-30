@@ -1,0 +1,29 @@
+giback
+======
+
+NAME
+----
+giback
+
+DESCRIPTION
+-----------
+Giback is a command-line utility for easily backing up your files to git
+repositories. After setting up a configuration file listing your desired files,
+and the respective target repository, you can then at any time command giback
+to execute the backup.
+
+OPTIONS
+-------
+-w
+    Path to a workspace. Use it if you don't want your workspace to be
+    "/home/user/.giback". All repositories will be kept there.
+
+-c
+    Path to a configuration file. Use it if you want a configuration file
+    that's not located at the default path "/home/user/.giback.yml".
+
+-v
+    By default giback prints useful log messages describing its operations as
+    it runs. It doesn't however show the output of the git command it runs.
+    With this flag all git output will be visible. This is specifically useful
+    for debugging.
