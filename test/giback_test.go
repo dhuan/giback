@@ -26,8 +26,44 @@ func TestBackupSuccessfully(t *testing.T) {
 		"Done!",
 	})
 
-	testutils.AssertGitLog(t, []string{
+	testutils.AssertGitLog(t, "test", []string{
 		"Super Man <superman@example.com> Backing up!",
+	})
+}
+
+func TestBackupSuccessfullyAll(t *testing.T) {
+	testutils.ResetTestEnvironment()
+
+	output, _ := testutils.RunGiback("all")
+
+	testutils.AssertOutput(t, output, []string{
+		"Running unit 'my_backup'.",
+		"Repository has not been cloned yet. Will clone now: ssh://git@localhost:2222/srv/git/test.git",
+		"Identifying files...",
+		withFullPath("backup_files/another_file.txt"),
+		withFullPath("backup_files/some_file.txt"),
+		"Files copied.",
+		"Files affected in the repository: another_file.txt,some_file.txt",
+		"Committing: Backing up!",
+		"Pushing...",
+		"Done!",
+		"Running unit 'another_backup'.",
+		"Repository has not been cloned yet. Will clone now: ssh://git@localhost:2222/srv/git/test2.git",
+		"Identifying files...",
+		withFullPath("backup_files/some_file.txt"),
+		"Files copied.",
+		"Files affected in the repository: some_file.txt",
+		"Committing: Backup.",
+		"Pushing...",
+		"Done!",
+	})
+
+	testutils.AssertGitLog(t, "test", []string{
+		"Super Man <superman@example.com> Backing up!",
+	})
+
+	testutils.AssertGitLog(t, "test2", []string{
+		"Someone <someone@example.com> Backup.",
 	})
 }
 
@@ -38,7 +74,7 @@ func TestBackupWithNoChanges(t *testing.T) {
 
 	output, _ := testutils.RunGiback("my_backup")
 
-	testutils.AssertGitLog(t, []string{
+	testutils.AssertGitLog(t, "test", []string{
 		"Super Man <superman@example.com> Backing up!",
 	})
 
@@ -52,7 +88,7 @@ func TestBackupWithNoChanges(t *testing.T) {
 		"Nothing has changed. No commit will be pushed to this repository.",
 	})
 
-	testutils.AssertGitLog(t, []string{
+	testutils.AssertGitLog(t, "test", []string{
 		"Super Man <superman@example.com> Backing up!",
 	})
 }

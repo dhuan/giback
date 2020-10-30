@@ -9,3 +9,11 @@ units:
   - "{PWD}/test/backup_files/*.txt"
   exclude:
   - "{PWD}/test/backup_files/unimportant_file.txt"
+- id: another_backup
+  repository: ssh://git@localhost:2222/srv/git/test2.git
+  author_name: Someone
+  author_email: someone@example.com
+  commit_message: 'Backup.'
+  branch: master
+  files:
+  - "{PWD}/test/backup_files/some_file.txt"

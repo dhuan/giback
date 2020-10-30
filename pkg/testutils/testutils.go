@@ -69,17 +69,17 @@ func AssertArraysEqual(t *testing.T, expected []string, result []string) {
 	}
 }
 
-func AssertGitLog(t *testing.T, expectedLog []string) {
-	gitLog := getGitLog()
+func AssertGitLog(t *testing.T, repositoryFolder string, expectedLog []string) {
+	gitLog := getGitLog(repositoryFolder)
 
 	AssertArraysEqual(t, expectedLog, gitLog)
 }
 
-func getGitLog() []string {
+func getGitLog(repositoryFolder string) []string {
 	workingDir, _ := os.Getwd()
 	gibackRootPath := fmt.Sprintf("%s/..", workingDir)
 
-	command := "ssh -i ./test/tmp/id_rsa git@localhost -p 2222 \"git -C /srv/git/test.git log --pretty='format:%cn <%ce> %s'\""
+	command := "ssh -i ./test/tmp/id_rsa git@localhost -p 2222 \"git -C /srv/git/" + repositoryFolder + ".git log --pretty='format:%cn <%ce> %s'\""
 
 	output, err := shell.Run(gibackRootPath, command, nil)
 
@@ -127,9 +127,14 @@ func cleanupEmptyLines(lines []string) []string {
 }
 
 func resetTestRepository(workingDir string) {
-	command := "ssh -i ./test/tmp/id_rsa git@localhost -p 2222 \"cd /srv/git/test.git && rm -rf ./* && git init --bare\""
+	var output []byte
 
-	output, err := shell.Run(workingDir, command, nil)
+	commands := []string{
+		"ssh -i ./test/tmp/id_rsa git@localhost -p 2222 \"cd /srv/git/test.git && rm -rf ./* && git init --bare\"",
+		"ssh -i ./test/tmp/id_rsa git@localhost -p 2222 \"cd /srv/git/test2.git && rm -rf ./* && git init --bare\"",
+	}
+
+	err := shell.RunMany(workingDir, commands, nil, &output)
 
 	if err != nil {
 		log.Println(fmt.Sprintf("An error occurred while trying to reset the test repository:\n%s", output))
@@ -139,9 +144,14 @@ func resetTestRepository(workingDir string) {
 }
 
 func emptyWorkspace(workingDir string) {
-	command := fmt.Sprintf("rm -rf %s/test/tmp/workspace/my_backup", workingDir)
+	var output []byte
 
-	output, err := shell.Run(workingDir, command, nil)
+	commands := []string{
+		fmt.Sprintf("rm -rf %s/test/tmp/workspace/my_backup", workingDir),
+		fmt.Sprintf("rm -rf %s/test/tmp/workspace/another_backup", workingDir),
+	}
+
+	err := shell.RunMany(workingDir, commands, nil, &output)
 
 	if err != nil {
 		log.Println(fmt.Sprintf("An error occurred while trying to empty the test workspaces:\n%s", output))

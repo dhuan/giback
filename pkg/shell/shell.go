@@ -35,6 +35,22 @@ func Run(dir string, command string, env map[string]string) ([]byte, error) {
 	return output, nil
 }
 
+func RunMany(dir string, commands []string, env map[string]string, output *[]byte) error {
+	if len(commands) == 0 {
+		return nil
+	}
+
+	result, err := Run(dir, commands[0], env)
+
+	if err != nil {
+		return err
+	}
+
+	*output = append(*output, result...)
+
+	return RunMany(dir, commands[1:], env, output)
+}
+
 func parseCommand(command string) (string, []string, error) {
 	commandArr, err := utils.SplitPreservingQuotes(command)
 
