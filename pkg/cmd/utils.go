@@ -52,10 +52,12 @@ func runUnit(unit app.PushUnit, workspacePath string) error {
 
 	filePatterns := evaluateMany(vars, unit.Files)
 
+	excludePatterns := evaluateMany(vars, unit.Exclude)
+
 	files := gibackfs.ScanDirMany(filePatterns)
 
-	if len(unit.Exclude) > 0 {
-		files = utils.FilterOut(files, unit.Exclude)
+	if len(excludePatterns) > 0 {
+		files = utils.FilterOut(files, excludePatterns)
 	}
 
 	for i := range files {

@@ -7,4 +7,5 @@ units:
   branch: master
   files:
   - "{PWD}/test/backup_files/*.txt"
-  exclude: []
+  exclude:
+  - "{PWD}/test/backup_files/unimportant_file.txt"
