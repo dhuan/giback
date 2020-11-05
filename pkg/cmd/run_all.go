@@ -11,6 +11,8 @@ import (
 
 func RunAll(c *cli.Context) error {
 	appContext, err := app.BuildContext(c)
+	shellRunOptions := buildShellRunOptions(appContext)
+	checkDependencies(shellRunOptions)
 
 	if err != nil {
 		log.Fatal(err)
@@ -23,7 +25,7 @@ func RunAll(c *cli.Context) error {
 	}
 
 	for _, unit := range config.Units {
-		runErr := runUnit(unit, workspacePath)
+		runErr := runUnit(unit, workspacePath, shellRunOptions)
 
 		if runErr != nil {
 			log.Fatal(runErr)

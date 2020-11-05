@@ -10,15 +10,16 @@ import (
 	"github.com/dhuan/giback/pkg/app"
 	"github.com/dhuan/giback/pkg/gibackfs"
 	"github.com/dhuan/giback/pkg/git"
+	"github.com/dhuan/giback/pkg/shell"
 	"github.com/dhuan/giback/pkg/utils"
 )
 
-func runUnit(unit app.PushUnit, workspacePath string) error {
+func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunOptions) error {
 	var err error
 
 	log.Println(fmt.Sprintf("Running unit '%s'.", unit.Id))
 
-	hasAccess := git.CheckAccess(workspacePath, unit.Repository)
+	hasAccess := git.CheckAccess(workspacePath, unit.Repository, shellRunOptions)
 
 	repositoryPath := getRepositoryPath(workspacePath, unit)
 
@@ -31,7 +32,7 @@ func runUnit(unit app.PushUnit, workspacePath string) error {
 	if !hasCloned {
 		log.Println(fmt.Sprintf("Repository has not been cloned yet. Will clone now: %s", unit.Repository))
 
-		err = git.Clone(workspacePath, unit.Repository, unit.Id)
+		err = git.Clone(workspacePath, unit.Repository, unit.Id, shellRunOptions)
 
 		if err != nil {
 			return errors.New("Failed to clone repository.")
@@ -40,7 +41,7 @@ func runUnit(unit app.PushUnit, workspacePath string) error {
 
 	if hasCloned {
 		log.Println(fmt.Sprintf("Pulling git changes."))
-		git.Pull(repositoryPath)
+		git.Pull(repositoryPath, shellRunOptions)
 	}
 
 	log.Println(fmt.Sprintf("Identifying files..."))
@@ -68,7 +69,7 @@ func runUnit(unit app.PushUnit, workspacePath string) error {
 
 	log.Println(fmt.Sprintf("Files copied."))
 
-	statusResult := git.Status(repositoryPath)
+	statusResult := git.Status(repositoryPath, shellRunOptions)
 
 	if len(statusResult) == 0 {
 		log.Println("Nothing has changed. No commit will be pushed to this repository.")
@@ -80,7 +81,7 @@ func runUnit(unit app.PushUnit, workspacePath string) error {
 
 	log.Println(fmt.Sprintf("Files affected in the repository: %s", fileList))
 
-	err = git.AddAll(repositoryPath)
+	err = git.AddAll(repositoryPath, shellRunOptions)
 
 	if err != nil {
 		log.Fatal("Failed to add.")
@@ -88,7 +89,7 @@ func runUnit(unit app.PushUnit, workspacePath string) error {
 
 	log.Println(fmt.Sprintf("Committing: %s", unit.Commit_Message))
 
-	err = git.Commit(repositoryPath, unit.Commit_Message, unit.Author_Name, unit.Author_Email)
+	err = git.Commit(repositoryPath, unit.Commit_Message, unit.Author_Name, unit.Author_Email, shellRunOptions)
 
 	if err != nil {
 		log.Fatal("Failed to commit.", err)
@@ -96,7 +97,7 @@ func runUnit(unit app.PushUnit, workspacePath string) error {
 
 	log.Println(fmt.Sprintf("Pushing..."))
 
-	err = git.Push(repositoryPath)
+	err = git.Push(repositoryPath, shellRunOptions)
 
 	if err != nil {
 		log.Fatal("Failed to push.", err)
@@ -148,4 +149,16 @@ func evaluate(vars map[string]string, str string) string {
 	}
 
 	return result
+}
+
+func buildShellRunOptions(context app.Context) shell.RunOptions {
+	return shell.RunOptions{context.Verbose}
+}
+
+func checkDependencies(shellRunOptions shell.RunOptions) {
+	_, err := shell.Run("", "which git", nil, shellRunOptions)
+
+	if err != nil {
+		log.Fatal("Giback requires git. Please make sure you have it installed before trying again.")
+	}
 }

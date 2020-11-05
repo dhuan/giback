@@ -13,6 +13,8 @@ import (
 
 func Default(c *cli.Context) error {
 	appContext, err := app.BuildContext(c)
+	shellRunOptions := buildShellRunOptions(appContext)
+	checkDependencies(shellRunOptions)
 
 	if err != nil {
 		log.Fatal(err)
@@ -38,7 +40,7 @@ func Default(c *cli.Context) error {
 		log.Fatal(err)
 	}
 
-	runErr := runUnit(unit, workspacePath)
+	runErr := runUnit(unit, workspacePath, shellRunOptions)
 
 	if runErr != nil {
 		log.Fatal(runErr)

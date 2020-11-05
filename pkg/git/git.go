@@ -8,14 +8,14 @@ import (
 	"github.com/dhuan/giback/pkg/utils"
 )
 
-func CheckAccess(workspace string, repository string) bool {
+func CheckAccess(workspace string, repository string, shellRunOptions shell.RunOptions) bool {
 	if !gibackfs.FolderExists(workspace) {
 		return false
 	}
 
 	command := "git ls-remote " + repository
 
-	_, runErr := shell.Run(workspace, command, nil)
+	_, runErr := shell.Run(workspace, command, nil, shellRunOptions)
 
 	if runErr != nil {
 		return false
@@ -24,18 +24,18 @@ func CheckAccess(workspace string, repository string) bool {
 	return true
 }
 
-func Clone(workspace string, repositoryPath string, saveAs string) error {
+func Clone(workspace string, repositoryPath string, saveAs string, shellRunOptions shell.RunOptions) error {
 	command := fmt.Sprintf("git clone %s %s", repositoryPath, saveAs)
 
-	_, err := shell.Run(workspace, command, nil)
+	_, err := shell.Run(workspace, command, nil, shellRunOptions)
 
 	return err
 }
 
-func Pull(repositoryPath string) error {
+func Pull(repositoryPath string, shellRunOptions shell.RunOptions) error {
 	commandFetch := "git fetch"
 
-	_, errFetch := shell.Run(repositoryPath, commandFetch, nil)
+	_, errFetch := shell.Run(repositoryPath, commandFetch, nil, shellRunOptions)
 
 	if errFetch != nil {
 		return errFetch
@@ -43,7 +43,7 @@ func Pull(repositoryPath string) error {
 
 	commandRebase := "git rebase origin/master"
 
-	_, errRebase := shell.Run(repositoryPath, commandRebase, nil)
+	_, errRebase := shell.Run(repositoryPath, commandRebase, nil, shellRunOptions)
 
 	if errRebase != nil {
 		return errRebase
@@ -52,12 +52,12 @@ func Pull(repositoryPath string) error {
 	return nil
 }
 
-func Status(repositoryPath string) []GitStatusResult {
+func Status(repositoryPath string, shellRunOptions shell.RunOptions) []GitStatusResult {
 	var result []GitStatusResult
 
 	command := fmt.Sprintf("git status --short")
 
-	statusOutput, _ := shell.Run(repositoryPath, command, nil)
+	statusOutput, _ := shell.Run(repositoryPath, command, nil, shellRunOptions)
 
 	statusFiles := utils.SedReplaceGlobal(string(statusOutput), `^...`, "")
 
@@ -70,8 +70,8 @@ func Status(repositoryPath string) []GitStatusResult {
 	return result
 }
 
-func AddAll(repositoryPath string) error {
-	_, err := shell.Run(repositoryPath, "git add .", nil)
+func AddAll(repositoryPath string, shellRunOptions shell.RunOptions) error {
+	_, err := shell.Run(repositoryPath, "git add .", nil, shellRunOptions)
 
 	if err != nil {
 		return err
@@ -80,7 +80,7 @@ func AddAll(repositoryPath string) error {
 	return nil
 }
 
-func Commit(repositoryPath string, message string, authorName string, authorEmail string) error {
+func Commit(repositoryPath string, message string, authorName string, authorEmail string, shellRunOptions shell.RunOptions) error {
 	var env map[string]string
 
 	env = make(map[string]string)
@@ -92,7 +92,7 @@ func Commit(repositoryPath string, message string, authorName string, authorEmai
 
 	command := fmt.Sprintf("git commit -m \"%s\"", message)
 
-	_, err := shell.Run(repositoryPath, command, env)
+	_, err := shell.Run(repositoryPath, command, env, shellRunOptions)
 
 	if err != nil {
 		return err
@@ -101,8 +101,8 @@ func Commit(repositoryPath string, message string, authorName string, authorEmai
 	return nil
 }
 
-func Push(repositoryPath string) error {
-	_, err := shell.Run(repositoryPath, "git push origin master", nil)
+func Push(repositoryPath string, shellRunOptions shell.RunOptions) error {
+	_, err := shell.Run(repositoryPath, "git push origin master", nil, shellRunOptions)
 
 	if err != nil {
 		return err

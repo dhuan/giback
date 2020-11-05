@@ -10,7 +10,7 @@ DESCRIPTION
 Giback is a command-line utility for easily backing up your files to git
 repositories. After setting up a configuration file listing your desired files,
 and the respective target repository, you can then at any time command giback
-to execute the backup.
+to backup your files.
 
 OPTIONS
 -------
@@ -27,3 +27,48 @@ OPTIONS
     it runs. It doesn't however show the output of the git command it runs.
     With this flag all git output will be visible. This is specifically useful
     for debugging.
+
+CONFIGURATION
+-------------
+Giback relies on a configuration file to know what it needs to do. Through this
+configuration, you define which files you want to backup and the git repository
+information. Unless a different path is specified through the "-c" flag, Giback
+reads "/home/your_user/.giback.yml" for retrieving your configuration.
+Following is an example of configuration:
+
+> units:
+> - id: my_backup
+>   repository: ssh://git@github.com:some_user/some_repository.git
+>   author_name: Someone
+>   author_email: someone@example.com
+>   commit_message: 'Backing up!'
+>   files:
+>   - /path/to/some/folder/*.txt"
+>   - /path/to/another/folder/*.jpg"
+>   exclude:
+>   - /path/to/some/folder/unwanted_file.txt"
+> - id: another_backup
+>   repository: ssh://git@github.com:some_user/some_repository.git
+>   author_name: Someone
+>   author_email: someone@example.com
+>   commit_message: 'Backing up!'
+>   files:
+>   - /path/to/some/folder/*.txt"
+>   - /path/to/another/folder/*.jpg"
+>   exclude:
+>   - /path/to/some/folder/unwanted_file.txt"
+
+The configuration example above defines two "Backup Units". You can then
+command Giback to backup things for you in the following ways:
+
+> $ giback all
+
+All your Backup Units will be executed, meaning "my_backup" and "some_backup",
+each being commited to their respective repositories, including their
+respective files.
+
+You may wish to run just one Backup Unit:
+
+> $ giback my_backup
+
+Thus backing up only the "my_backup" Backup Unit.

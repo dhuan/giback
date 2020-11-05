@@ -3,11 +3,24 @@ package shell
 import (
 	"fmt"
 	"github.com/dhuan/giback/pkg/utils"
+	"log"
 	"os"
 	"os/exec"
 )
 
-func Run(dir string, command string, env map[string]string) ([]byte, error) {
+func Run(dir string, command string, env map[string]string, options RunOptions) ([]byte, error) {
+	if options.Debug {
+		dirDebug := dir
+
+		if dirDebug == "" {
+			pwd, _ := os.Getwd()
+
+			dirDebug = pwd
+		}
+
+		log.Println(fmt.Sprintf("[%s] %s", dir, command))
+	}
+
 	commandName, commandParameters, err := parseCommand(command)
 
 	if err != nil {
@@ -35,12 +48,20 @@ func Run(dir string, command string, env map[string]string) ([]byte, error) {
 	return output, nil
 }
 
-func RunMany(dir string, commands []string, env map[string]string, output *[]byte) error {
+type RunOptions struct {
+	Debug bool
+}
+
+func RunOptionsDefault() RunOptions {
+	return RunOptions{false}
+}
+
+func RunMany(dir string, commands []string, env map[string]string, output *[]byte, shellRunOptions RunOptions) error {
 	if len(commands) == 0 {
 		return nil
 	}
 
-	result, err := Run(dir, commands[0], env)
+	result, err := Run(dir, commands[0], env, shellRunOptions)
 
 	if err != nil {
 		return err
@@ -48,7 +69,7 @@ func RunMany(dir string, commands []string, env map[string]string, output *[]byt
 
 	*output = append(*output, result...)
 
-	return RunMany(dir, commands[1:], env, output)
+	return RunMany(dir, commands[1:], env, output, shellRunOptions)
 }
 
 func parseCommand(command string) (string, []string, error) {

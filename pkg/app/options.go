@@ -11,6 +11,7 @@ import (
 type Context struct {
 	ConfigFilePath string
 	WorkspacePath  string
+	Verbose        bool
 }
 
 func BuildContext(c *cli.Context) (Context, error) {
@@ -22,6 +23,7 @@ func BuildContext(c *cli.Context) (Context, error) {
 
 	var workspacePath string
 	var configFilePath string
+	var verbose bool
 
 	if c.IsSet("c") {
 		configFilePath = c.String("c")
@@ -35,6 +37,12 @@ func BuildContext(c *cli.Context) (Context, error) {
 		workspacePath = fmt.Sprintf("%s/.giback", usr.HomeDir)
 	}
 
+	if c.IsSet("v") {
+		verbose = c.Bool("v")
+	} else {
+		verbose = false
+	}
+
 	if !fileExists(configFilePath) {
 		log.Fatal(fmt.Sprintf("Config file does not exist:  %s", configFilePath))
 	}
@@ -43,5 +51,5 @@ func BuildContext(c *cli.Context) (Context, error) {
 		log.Fatal(fmt.Sprintf("Workspace folder does not exist:  %s", workspacePath))
 	}
 
-	return Context{configFilePath, workspacePath}, nil
+	return Context{configFilePath, workspacePath, verbose}, nil
 }
