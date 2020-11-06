@@ -6,32 +6,23 @@ import (
 	"log"
 
 	"github.com/dhuan/giback/pkg/app"
-	"github.com/dhuan/giback/pkg/gibackfs"
 
 	"github.com/urfave/cli/v2"
 )
 
 func Default(c *cli.Context) error {
-	appContext, err := app.BuildContext(c)
-	shellRunOptions := buildShellRunOptions(appContext)
-	checkDependencies(shellRunOptions)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	config, workspacePath, err := gibackfs.GetUserConfig(appContext)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	unitId := c.Args().First()
 
 	if unitId == "" {
 		log.Println("Nothing to do.")
 
 		return nil
+	}
+
+	config, workspacePath, shellRunOptions, err := runUnitPrepare(c, unitId)
+
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	unit, err := getUnitById(unitId, config.Units)

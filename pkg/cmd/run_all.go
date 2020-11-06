@@ -3,22 +3,11 @@ package cmd
 import (
 	"log"
 
-	"github.com/dhuan/giback/pkg/app"
-	"github.com/dhuan/giback/pkg/gibackfs"
-
 	"github.com/urfave/cli/v2"
 )
 
 func RunAll(c *cli.Context) error {
-	appContext, err := app.BuildContext(c)
-	shellRunOptions := buildShellRunOptions(appContext)
-	checkDependencies(shellRunOptions)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	config, workspacePath, err := gibackfs.GetUserConfig(appContext)
+	config, workspacePath, shellRunOptions, err := runUnitPrepare(c, "")
 
 	if err != nil {
 		log.Fatal(err)

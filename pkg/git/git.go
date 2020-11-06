@@ -2,6 +2,7 @@ package git
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/dhuan/giback/pkg/gibackfs"
 	"github.com/dhuan/giback/pkg/shell"
@@ -111,6 +112,26 @@ func Push(repositoryPath string, shellRunOptions shell.RunOptions) error {
 	return nil
 }
 
+func GetRepositoryMetadata(repositoryPath string, shellRunOptions shell.RunOptions) (RepositoryMetadata, error) {
+	if !gibackfs.FolderExists(repositoryPath) {
+		return RepositoryMetadata{}, nil
+	}
+
+	output, err := shell.Run(repositoryPath, "git config --get remote.origin.url", nil, shellRunOptions)
+
+	if err != nil {
+		return RepositoryMetadata{}, err
+	}
+
+	address := strings.TrimSpace(string(output))
+
+	return RepositoryMetadata{address}, nil
+}
+
 type GitStatusResult struct {
 	File string
+}
+
+type RepositoryMetadata struct {
+	Address string
 }

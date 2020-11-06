@@ -20,11 +20,15 @@ func ResetTestEnvironment() {
 	emptyWorkspace(gibackRootPath)
 }
 
-func RunGiback(command string) ([]byte, error) {
+func RunGiback(command string, options RunGibackOptions) ([]byte, error) {
 	workspacePath := "./test/tmp/workspace"
 	configPath := "./test/config/default.yml"
 	workingDir, _ := os.Getwd()
 	gibackRootPath := fmt.Sprintf("%s/..", workingDir)
+
+	if options.ConfigFile != "" {
+		configPath = fmt.Sprintf("./test/config/%s.yml", options.ConfigFile)
+	}
 
 	commandTranformed := fmt.Sprintf("./giback -w %s -c %s %s", workspacePath, configPath, command)
 
@@ -40,6 +44,12 @@ func RunGiback(command string) ([]byte, error) {
 func AssertHasError(t *testing.T, err error) {
 	if err == nil {
 		t.Error("Expected an error to have been resulted.")
+	}
+}
+
+func AssertHasNoError(t *testing.T, err error) {
+	if err != nil {
+		t.Error("Expected not to fail.")
 	}
 }
 
@@ -73,6 +83,10 @@ func AssertGitLog(t *testing.T, repositoryFolder string, expectedLog []string) {
 	gitLog := getGitLog(repositoryFolder)
 
 	AssertArraysEqual(t, expectedLog, gitLog)
+}
+
+type RunGibackOptions struct {
+	ConfigFile string
 }
 
 func getGitLog(repositoryFolder string) []string {

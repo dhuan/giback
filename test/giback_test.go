@@ -11,7 +11,7 @@ import (
 func TestBackupSuccessfully(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
-	output, _ := testutils.RunGiback("my_backup")
+	output, _ := testutils.RunGiback("my_backup", testutils.RunGibackOptions{})
 
 	testutils.AssertOutput(t, output, []string{
 		"Running unit 'my_backup'.",
@@ -34,7 +34,7 @@ func TestBackupSuccessfully(t *testing.T) {
 func TestBackupSuccessfullyAll(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
-	output, _ := testutils.RunGiback("all")
+	output, _ := testutils.RunGiback("all", testutils.RunGibackOptions{})
 
 	testutils.AssertOutput(t, output, []string{
 		"Running unit 'my_backup'.",
@@ -70,9 +70,9 @@ func TestBackupSuccessfullyAll(t *testing.T) {
 func TestBackupWithNoChanges(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
-	testutils.RunGiback("my_backup")
+	testutils.RunGiback("my_backup", testutils.RunGibackOptions{})
 
-	output, _ := testutils.RunGiback("my_backup")
+	output, _ := testutils.RunGiback("my_backup", testutils.RunGibackOptions{})
 
 	testutils.AssertGitLog(t, "test", []string{
 		"Super Man <superman@example.com> Backing up!",
@@ -94,12 +94,48 @@ func TestBackupWithNoChanges(t *testing.T) {
 }
 
 func TestFailRunningUnexistingUnit(t *testing.T) {
-	output, err := testutils.RunGiback("my_unexisting_backup")
+	output, err := testutils.RunGiback("my_unexisting_backup", testutils.RunGibackOptions{})
 
 	testutils.AssertHasError(t, err)
 
 	testutils.AssertOutput(t, output, []string{
 		"Could not find unit with ID 'my_unexisting_backup'.",
+	})
+}
+
+func TestFailRunningAllWithUnmatchingRepositories(t *testing.T) {
+	testutils.ResetTestEnvironment()
+
+	output, err := testutils.RunGiback("all", testutils.RunGibackOptions{})
+
+	testutils.AssertHasNoError(t, err)
+
+	output, err = testutils.RunGiback("all", testutils.RunGibackOptions{
+		ConfigFile: "invalid",
+	})
+
+	testutils.AssertHasError(t, err)
+
+	testutils.AssertOutput(t, output, []string{
+		"The following repositories defined in your configuration don't match with the ones located in your workspace: another_backup.",
+	})
+}
+
+func TestFailRunningSingleWithUnmatchingRepositories(t *testing.T) {
+	testutils.ResetTestEnvironment()
+
+	output, err := testutils.RunGiback("all", testutils.RunGibackOptions{})
+
+	testutils.AssertHasNoError(t, err)
+
+	output, err = testutils.RunGiback("another_backup", testutils.RunGibackOptions{
+		ConfigFile: "invalid",
+	})
+
+	testutils.AssertHasError(t, err)
+
+	testutils.AssertOutput(t, output, []string{
+		"The repository configured for \"another_backup\" does not match with the one cloned at your workspace.",
 	})
 }
 

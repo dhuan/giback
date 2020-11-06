@@ -7,6 +7,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/urfave/cli/v2"
+
 	"github.com/dhuan/giback/pkg/app"
 	"github.com/dhuan/giback/pkg/gibackfs"
 	"github.com/dhuan/giback/pkg/git"
@@ -161,4 +163,72 @@ func checkDependencies(shellRunOptions shell.RunOptions) {
 	if err != nil {
 		log.Fatal("Giback requires git. Please make sure you have it installed before trying again.")
 	}
+}
+
+func checkRepos(config app.Config, workspacePath string, shellRunOptions shell.RunOptions) ([]string, error) {
+	var invalidRepositories []string
+
+	for i := range config.Units {
+		unit := config.Units[i]
+		repositoryPath := fmt.Sprintf("%s/%s", workspacePath, unit.Id)
+
+		if !gibackfs.FolderExists(repositoryPath) {
+			continue
+		}
+
+		repositoryMetadata, err := git.GetRepositoryMetadata(repositoryPath, shellRunOptions)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if repositoryMetadata.Address != unit.Repository {
+			invalidRepositories = append(invalidRepositories, unit.Id)
+		}
+	}
+
+	return invalidRepositories, nil
+}
+
+func runUnitPrepare(c *cli.Context, unitId string) (app.Config, string, shell.RunOptions, error) {
+	allMode := false
+
+	if unitId == "" {
+		allMode = true
+	}
+
+	appContext, err := app.BuildContext(c)
+	if err != nil {
+		return app.Config{}, "", shell.RunOptions{}, err
+	}
+
+	shellRunOptions := buildShellRunOptions(appContext)
+
+	checkDependencies(shellRunOptions)
+
+	config, workspacePath, err := gibackfs.GetUserConfig(appContext)
+	if err != nil {
+		return app.Config{}, "", shell.RunOptions{}, err
+	}
+
+	invalidRepos, err := checkRepos(config, workspacePath, shellRunOptions)
+	if err != nil {
+		return app.Config{}, "", shell.RunOptions{}, err
+	}
+
+	if !allMode && len(invalidRepos) > 0 && utils.IndexOfString(invalidRepos, unitId) > -1 {
+		return app.Config{}, "", shell.RunOptions{}, errors.New(fmt.Sprintf(
+			"The repository configured for \"%s\" does not match with the one cloned at your workspace.",
+			unitId,
+		))
+	}
+
+	if allMode && len(invalidRepos) > 0 {
+		return app.Config{}, "", shell.RunOptions{}, errors.New(fmt.Sprintf(
+			"The following repositories defined in your configuration don't match with the ones located in your workspace: %s.",
+			strings.Join(invalidRepos, ","),
+		))
+	}
+
+	return config, workspacePath, shellRunOptions, nil
 }

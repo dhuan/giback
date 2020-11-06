@@ -1,3 +1,4 @@
 /giback
 /test/tmp/id_rsa*
 /test/tmp/workspace/my_backup
+test/tmp/workspace/another_backup

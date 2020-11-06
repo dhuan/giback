@@ -68,3 +68,13 @@ func FilterOut(files []string, patterns []string) []string {
 
 	return FilterOut(filesFiltered, patterns[1:])
 }
+
+func IndexOfString(list []string, find string) int {
+	for i := range list {
+		if list[i] == find {
+			return i
+		}
+	}
+
+	return -1
+}
