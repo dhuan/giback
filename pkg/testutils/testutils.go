@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -114,6 +115,14 @@ func cleanupLogMessages(lines []string) []string {
 	linesTransformed := make([]string, len(lines))
 
 	for i := range lines {
+		containsDate := regexMatches("^[0-9]{4}\\/", lines[i])
+
+		if !containsDate {
+			linesTransformed[i] = lines[i]
+
+			continue
+		}
+
 		split := strings.Split(lines[i], " ")
 
 		if len(split) < 3 {
@@ -172,4 +181,14 @@ func emptyWorkspace(workingDir string) {
 
 		log.Fatal(err)
 	}
+}
+
+func regexMatches(pattern string, subject string) bool {
+	matched, err := regexp.MatchString(pattern, subject)
+
+	if err != nil {
+		return false
+	}
+
+	return matched
 }

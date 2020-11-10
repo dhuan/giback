@@ -211,6 +211,15 @@ func runUnitPrepare(c *cli.Context, unitId string) (app.Config, string, shell.Ru
 		return app.Config{}, "", shell.RunOptions{}, err
 	}
 
+	invalidUnits, invalidUnitsIds := app.ValidateUnits(config.Units)
+
+	if len(invalidUnits) > 0 {
+		log.Fatal(fmt.Sprintf(
+			"The following units are not configured properly:\n\n%s\n\nCheck the manual to find out how to properly configure Giback.",
+			buildInvalidUnitsErrorMessage(invalidUnits, invalidUnitsIds),
+		))
+	}
+
 	invalidRepos, err := checkRepos(config, workspacePath, shellRunOptions)
 	if err != nil {
 		return app.Config{}, "", shell.RunOptions{}, err
@@ -231,4 +240,14 @@ func runUnitPrepare(c *cli.Context, unitId string) (app.Config, string, shell.Ru
 	}
 
 	return config, workspacePath, shellRunOptions, nil
+}
+
+func buildInvalidUnitsErrorMessage(invalidUnitErrorMessage []string, unitIds []string) string {
+	var messages []string
+
+	for i := range invalidUnitErrorMessage {
+		messages = append(messages, fmt.Sprintf("%s:\n%s", unitIds[i], invalidUnitErrorMessage[i]))
+	}
+
+	return strings.Join(messages, "\n\n")
 }
