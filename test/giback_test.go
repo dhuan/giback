@@ -156,6 +156,28 @@ func TestFailRunningAllWithInvalidConfigMissingFields(t *testing.T) {
 	})
 }
 
+func TestFailRunningSingleWithInvalidConfigMissingFields(t *testing.T) {
+	testutils.ResetTestEnvironment()
+
+	_, err := testutils.RunGiback("my_backup", testutils.RunGibackOptions{
+		ConfigFile: "invalid_missing_fields",
+	})
+
+	testutils.AssertHasNoError(t, err)
+
+	output, err := testutils.RunGiback("another_backup", testutils.RunGibackOptions{
+		ConfigFile: "invalid_missing_fields",
+	})
+
+	testutils.AssertHasError(t, err)
+
+	testutils.AssertOutput(t, output, []string{
+		"'another_backup' is not configured properly:",
+		"Missing the following fields: repository,files",
+		"Check the manual to find out how to properly configure Giback.",
+	})
+}
+
 func withFullPath(path string) string {
 	pwd, _ := os.Getwd()
 
