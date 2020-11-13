@@ -211,7 +211,19 @@ func runUnitPrepare(c *cli.Context, unitId string) (app.Config, string, shell.Ru
 		return app.Config{}, "", shell.RunOptions{}, err
 	}
 
-	invalidUnits, invalidUnitsIds := app.ValidateUnits(config.Units)
+	units := config.Units
+
+	if !allMode {
+		unit, err := getUnitById(unitId, config.Units)
+
+		if err != nil {
+			return app.Config{}, "", shell.RunOptions{}, err
+		}
+
+		units = []app.PushUnit{unit}
+	}
+
+	invalidUnits, invalidUnitsIds := app.ValidateUnits(units)
 
 	if allMode && len(invalidUnits) > 0 {
 		log.Fatal(fmt.Sprintf(
@@ -220,9 +232,8 @@ func runUnitPrepare(c *cli.Context, unitId string) (app.Config, string, shell.Ru
 		))
 	}
 
-	if !allMode && len(invalidUnits) > 0 && utils.IndexOfString(invalidUnitsIds, unitId) > -1 {
-		invalidUnitIdIndex := utils.IndexOfString(invalidUnitsIds, unitId)
-		invalidUnitErrorMessage := invalidUnits[invalidUnitIdIndex]
+	if !allMode && len(invalidUnits) > 0 {
+		invalidUnitErrorMessage := invalidUnits[0]
 
 		log.Fatal(fmt.Sprintf(
 			"'%s' is not configured properly:\n\n%s\n\nCheck the manual to find out how to properly configure Giback.",
