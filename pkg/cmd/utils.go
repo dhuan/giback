@@ -57,11 +57,7 @@ func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunO
 
 	excludePatterns := evaluateMany(vars, unit.Exclude)
 
-	files := gibackfs.ScanDirMany(filePatterns)
-
-	if len(excludePatterns) > 0 {
-		files = utils.FilterOut(files, excludePatterns)
-	}
+	files := gibackfs.ScanDirMany(filePatterns, excludePatterns)
 
 	for i := range files {
 		log.Println(fmt.Sprintf("%s", files[i]))
@@ -154,7 +150,9 @@ func evaluate(vars map[string]string, str string) string {
 }
 
 func buildShellRunOptions(context app.Context) shell.RunOptions {
-	return shell.RunOptions{context.Verbose}
+	return shell.RunOptions{
+		Debug: context.Verbose,
+	}
 }
 
 func checkDependencies(shellRunOptions shell.RunOptions) {

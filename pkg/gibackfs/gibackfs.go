@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 
 	"github.com/dhuan/giback/pkg/app"
+	"github.com/dhuan/giback/pkg/utils"
 	"gopkg.in/yaml.v2"
 )
 
@@ -78,7 +79,7 @@ func ScanDir(path string) []string {
 	return filesFiltered
 }
 
-func ScanDirMany(pathList []string) []string {
+func ScanDirMany(pathList []string, excludePatterns []string) []string {
 	var files []string
 
 	if len(pathList) == 0 {
@@ -87,7 +88,11 @@ func ScanDirMany(pathList []string) []string {
 
 	files = ScanDir(pathList[0])
 
-	files = append(files, ScanDirMany(pathList[1:])...)
+	if len(excludePatterns) > 0 {
+		files = utils.FilterOut(files, excludePatterns)
+	}
+
+	files = append(files, ScanDirMany(pathList[1:], excludePatterns)...)
 
 	return files
 }
