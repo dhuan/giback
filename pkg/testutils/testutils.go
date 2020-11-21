@@ -2,6 +2,7 @@ package testutils
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"regexp"
@@ -11,6 +12,14 @@ import (
 	"github.com/dhuan/giback/pkg/shell"
 )
 
+func defaultBackupFiles() []string {
+	return []string{
+		"some_file.txt This file shall be backed up.",
+		"another_file.txt This file shall be backed up.",
+		"unimportant_file.txt This file shall not be commited.",
+	}
+}
+
 func ResetTestEnvironment() {
 	workingDir, _ := os.Getwd()
 
@@ -19,6 +28,8 @@ func ResetTestEnvironment() {
 	resetTestRepository(gibackRootPath)
 
 	emptyWorkspace(gibackRootPath)
+
+	AddFileToBackupFilesFolder(defaultBackupFiles())
 }
 
 func RunGiback(command string, options RunGibackOptions) ([]byte, error) {
@@ -84,6 +95,41 @@ func AssertGitLog(t *testing.T, repositoryFolder string, expectedLog []string) {
 	gitLog := getGitLog(repositoryFolder)
 
 	AssertArraysEqual(t, expectedLog, gitLog)
+}
+
+func AddFileToBackupFilesFolder(fileDefinitions []string) {
+	if len(fileDefinitions) == 0 {
+		return
+	}
+
+	workingDir, _ := os.Getwd()
+	gibackRootPath := fmt.Sprintf("%s/..", workingDir)
+	backupDir := fmt.Sprintf("%s/test/backup_files", gibackRootPath)
+
+	fileName, fileContent := parseFileDefinition(fileDefinitions[0])
+
+	fileNameFull := fmt.Sprintf("%s/%s", backupDir, fileName)
+
+	err := ioutil.WriteFile(fileNameFull, []byte(fileContent), 0644)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	AddFileToBackupFilesFolder(fileDefinitions[1:])
+}
+
+func parseFileDefinition(fileDefinition string) (string, string) {
+	splitResult := strings.Split(fileDefinition, " ")
+
+	if len(splitResult) < 2 {
+		log.Fatalln(fmt.Sprintf("File definition could not be parsed: %s", fileDefinition))
+	}
+
+	fileName := splitResult[0]
+	fileContent := splitResult[1:]
+
+	return fileName, strings.Join(fileContent, " ")
 }
 
 type RunGibackOptions struct {
