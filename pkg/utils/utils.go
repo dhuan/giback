@@ -78,3 +78,51 @@ func IndexOfString(list []string, find string) int {
 
 	return -1
 }
+
+func GetFileNameMany(files []string) []string {
+	var fileNames []string
+
+	for i := range files {
+		file := files[i]
+
+		fileNames = append(fileNames, GetFileName(file))
+	}
+
+	return fileNames
+}
+
+func GetFileName(file string) string {
+	splitResult := strings.Split(file, "/")
+
+	if len(splitResult) == 0 {
+		return ""
+	}
+
+	return splitResult[len(splitResult)-1]
+}
+
+func StringListDiff(listA []string, listB []string) []string {
+	var listC []string
+
+	for i := range listA {
+		if IndexOfString(listB, listA[i]) > -1 {
+			continue
+		}
+
+		listC = append(listC, listA[i])
+	}
+
+	return listC
+}
+
+func FilterOutMatching(list []string, matches []string) []string {
+	var newList []string
+
+	for i := range list {
+		if IndexOfString(matches, list[i]) == -1 {
+			newList = append(newList, list[i])
+		}
+	}
+
+	return newList
+}

@@ -71,8 +71,32 @@ func Status(repositoryPath string, shellRunOptions shell.RunOptions) []GitStatus
 	return result
 }
 
+func Reset(repositoryPath string, shellRunOptions shell.RunOptions) error {
+	_, err := shell.Run(repositoryPath, "git reset", nil, shellRunOptions)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func AddAll(repositoryPath string, shellRunOptions shell.RunOptions) error {
 	_, err := shell.Run(repositoryPath, "git add .", nil, shellRunOptions)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func Add(repositoryPath string, files []string, shellRunOptions shell.RunOptions) error {
+	filesJoined := strings.Join(files, " ")
+
+	command := fmt.Sprintf("git add %s", filesJoined)
+
+	_, err := shell.Run(repositoryPath, command, nil, shellRunOptions)
 
 	if err != nil {
 		return err

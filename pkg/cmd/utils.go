@@ -59,6 +59,12 @@ func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunO
 
 	files := gibackfs.ScanDirMany(filePatterns, excludePatterns)
 
+	fileNames := utils.GetFileNameMany(files)
+
+	statusBeforeCopyResult := git.Status(repositoryPath, shellRunOptions)
+
+	statusFilesBeforeCopy := buildFileListFromStatusResult(statusBeforeCopyResult)
+
 	for i := range files {
 		log.Println(fmt.Sprintf("%s", files[i]))
 	}
@@ -69,17 +75,36 @@ func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunO
 
 	statusResult := git.Status(repositoryPath, shellRunOptions)
 
-	if len(statusResult) == 0 {
+	ignoredFiles := utils.StringListDiff(statusFilesBeforeCopy, fileNames)
+
+	filesToBeAdded := utils.FilterOutMatching(
+		buildFileListFromStatusResult(statusResult),
+		ignoredFiles,
+	)
+
+	if len(filesToBeAdded) == 0 {
 		log.Println("Nothing has changed. No commit will be pushed to this repository.")
 
 		return nil
 	}
 
-	fileList := buildFileListFromStatusResult(statusResult)
+	log.Println(fmt.Sprintf(
+		"Files affected in the repository: %s",
+		strings.Join(filesToBeAdded, ","),
+	))
 
-	log.Println(fmt.Sprintf("Files affected in the repository: %s", fileList))
+	if len(ignoredFiles) > 0 {
+		log.Println(fmt.Sprintf(
+			"The following files located in the repository folder will not be commited as they are not included in the backup files: %s",
+			strings.Join(ignoredFiles, ","),
+		))
+	}
 
-	err = git.AddAll(repositoryPath, shellRunOptions)
+	if err = git.Reset(repositoryPath, shellRunOptions); err != nil {
+		log.Fatal("Failed to reset.")
+	}
+
+	err = git.Add(repositoryPath, filesToBeAdded, shellRunOptions)
 
 	if err != nil {
 		log.Fatal("Failed to add.")
@@ -116,14 +141,14 @@ func getRepositoryPath(workspace string, unit app.PushUnit) string {
 	return workspace + "/" + unit.Id
 }
 
-func buildFileListFromStatusResult(statusResults []git.GitStatusResult) string {
+func buildFileListFromStatusResult(statusResults []git.GitStatusResult) []string {
 	var fileList []string
 
 	for i := range statusResults {
 		fileList = append(fileList, statusResults[i].File)
 	}
 
-	return strings.Join(fileList, ",")
+	return fileList
 }
 
 func evaluateMany(vars map[string]string, strings []string) []string {

@@ -93,6 +93,44 @@ func TestBackupWithNoChanges(t *testing.T) {
 	})
 }
 
+func TestBackupSuccessfullyWithIgnoredFiles(t *testing.T) {
+	testutils.ResetTestEnvironment()
+
+	_, err := testutils.RunGiback("my_backup", testutils.RunGibackOptions{})
+
+	testutils.AssertHasNoError(t, err)
+
+	testutils.AddFileToWorkspace("my_backup", []string{
+		"this_file_shall_not_be_commited.html File content.",
+	})
+
+	testutils.AddFileToBackupFilesFolder([]string{
+		"a_new_file.txt File content.",
+	})
+
+	output, err := testutils.RunGiback("my_backup", testutils.RunGibackOptions{})
+
+	testutils.AssertOutput(t, output, []string{
+		"Running unit 'my_backup'.",
+		"Pulling git changes.",
+		"Identifying files...",
+		withFullPath("backup_files/a_new_file.txt"),
+		withFullPath("backup_files/another_file.txt"),
+		withFullPath("backup_files/some_file.txt"),
+		"Files copied.",
+		"Files affected in the repository: a_new_file.txt",
+		"The following files located in the repository folder will not be commited as they are not included in the backup files: this_file_shall_not_be_commited.html",
+		"Committing: Backing up!",
+		"Pushing...",
+		"Done!",
+	})
+
+	testutils.AssertGitLog(t, "test", []string{
+		"Super Man <superman@example.com> Backing up!",
+		"Super Man <superman@example.com> Backing up!",
+	})
+}
+
 func TestFailRunningUnexistingUnit(t *testing.T) {
 	output, err := testutils.RunGiback("my_unexisting_backup", testutils.RunGibackOptions{})
 

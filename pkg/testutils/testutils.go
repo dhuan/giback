@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"testing"
@@ -28,6 +29,8 @@ func ResetTestEnvironment() {
 	resetTestRepository(gibackRootPath)
 
 	emptyWorkspace(gibackRootPath)
+
+	emptyBackupFiles(gibackRootPath)
 
 	AddFileToBackupFilesFolder(defaultBackupFiles())
 }
@@ -97,6 +100,28 @@ func AssertGitLog(t *testing.T, repositoryFolder string, expectedLog []string) {
 	AssertArraysEqual(t, expectedLog, gitLog)
 }
 
+func AddFileToWorkspace(repositoryId string, fileDefinitions []string) {
+	if len(fileDefinitions) == 0 {
+		return
+	}
+
+	workingDir, _ := os.Getwd()
+	gibackRootPath := fmt.Sprintf("%s/..", workingDir)
+	repositoryDir := fmt.Sprintf("%s/test/tmp/workspace/%s", gibackRootPath, repositoryId)
+
+	fileName, fileContent := parseFileDefinition(fileDefinitions[0])
+
+	fileNameFull := fmt.Sprintf("%s/%s", repositoryDir, fileName)
+
+	err := ioutil.WriteFile(fileNameFull, []byte(fileContent), 0644)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	AddFileToWorkspace(repositoryId, fileDefinitions[1:])
+}
+
 func AddFileToBackupFilesFolder(fileDefinitions []string) {
 	if len(fileDefinitions) == 0 {
 		return
@@ -117,19 +142,6 @@ func AddFileToBackupFilesFolder(fileDefinitions []string) {
 	}
 
 	AddFileToBackupFilesFolder(fileDefinitions[1:])
-}
-
-func parseFileDefinition(fileDefinition string) (string, string) {
-	splitResult := strings.Split(fileDefinition, " ")
-
-	if len(splitResult) < 2 {
-		log.Fatalln(fmt.Sprintf("File definition could not be parsed: %s", fileDefinition))
-	}
-
-	fileName := splitResult[0]
-	fileContent := splitResult[1:]
-
-	return fileName, strings.Join(fileContent, " ")
 }
 
 type RunGibackOptions struct {
@@ -229,6 +241,28 @@ func emptyWorkspace(workingDir string) {
 	}
 }
 
+func emptyBackupFiles(gibackRootPath string) {
+	basePath := fmt.Sprintf("%s/test/backup_files", gibackRootPath)
+
+	filepath.Walk(basePath, func(path string, info os.FileInfo, err error) error {
+		if strings.Index(path, "gitkeep") > -1 {
+			return nil
+		}
+
+		if strings.Index(path, ".txt") == -1 && strings.Index(path, ".html") == -1 {
+			return nil
+		}
+
+		err = os.Remove(path)
+
+		if err != nil {
+			log.Fatalln(fmt.Sprintf("Failed while removing file to empty backup files: %s", path))
+		}
+
+		return nil
+	})
+}
+
 func regexMatches(pattern string, subject string) bool {
 	matched, err := regexp.MatchString(pattern, subject)
 
@@ -237,4 +271,17 @@ func regexMatches(pattern string, subject string) bool {
 	}
 
 	return matched
+}
+
+func parseFileDefinition(fileDefinition string) (string, string) {
+	splitResult := strings.Split(fileDefinition, " ")
+
+	if len(splitResult) < 2 {
+		log.Fatalln(fmt.Sprintf("File definition could not be parsed: %s", fileDefinition))
+	}
+
+	fileName := splitResult[0]
+	fileContent := splitResult[1:]
+
+	return fileName, strings.Join(fileContent, " ")
 }
