@@ -14,7 +14,7 @@ func Default(c *cli.Context) error {
 	unitId := c.Args().First()
 
 	if unitId == "" {
-		log.Println("Nothing to do.")
+		log.Println(cli.ShowAppHelp(c))
 
 		return nil
 	}
