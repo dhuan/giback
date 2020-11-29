@@ -1,3 +1,8 @@
+all: build
+
+build:
+	go build -o giback
+
 tests:
 	bash ./test/setup.sh
 	go clean -testcache
