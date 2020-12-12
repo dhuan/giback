@@ -7,6 +7,7 @@ type Config struct {
 type PushUnit struct {
 	Id             string
 	Repository     string
+	RepositoryPath string
 	Files          []string
 	Exclude        []string
 	Commit_Message string

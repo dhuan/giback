@@ -1,6 +1,7 @@
 package gibackfs
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -28,6 +29,10 @@ func GetUserConfig(appContext app.Context) (app.Config, string, error) {
 	fileContent := string(buffer)
 
 	yamlErr := yaml.Unmarshal([]byte(fileContent), &config)
+
+	for i := range config.Units {
+		config.Units[i].RepositoryPath = fmt.Sprintf("%s/%s", workspacePath, config.Units[i].Id)
+	}
 
 	if yamlErr != nil {
 		return config, workspacePath, yamlErr

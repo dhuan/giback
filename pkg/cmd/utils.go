@@ -23,13 +23,11 @@ func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunO
 
 	hasAccess := git.CheckAccess(workspacePath, unit.Repository, shellRunOptions)
 
-	repositoryPath := getRepositoryPath(workspacePath, unit)
-
 	if !hasAccess {
 		return errors.New("You don't have access to this repository.")
 	}
 
-	hasCloned := hasClonedRepository(workspacePath, unit.Id)
+	hasCloned := gibackfs.FolderExists(unit.RepositoryPath)
 
 	if !hasCloned {
 		log.Println(fmt.Sprintf("Repository has not been cloned yet. Will clone now: %s", unit.Repository))
@@ -43,7 +41,7 @@ func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunO
 
 	if hasCloned {
 		log.Println(fmt.Sprintf("Pulling git changes."))
-		git.Pull(repositoryPath, shellRunOptions)
+		git.Pull(unit.RepositoryPath, shellRunOptions)
 	}
 
 	log.Println(fmt.Sprintf("Identifying files..."))
@@ -61,7 +59,7 @@ func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunO
 
 	fileNames := utils.GetFileNameMany(files)
 
-	statusBeforeCopyResult := git.Status(repositoryPath, shellRunOptions)
+	statusBeforeCopyResult := git.Status(unit.RepositoryPath, shellRunOptions)
 
 	statusFilesBeforeCopy := buildFileListFromStatusResult(statusBeforeCopyResult)
 
@@ -69,11 +67,11 @@ func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunO
 		log.Println(fmt.Sprintf("%s", files[i]))
 	}
 
-	gibackfs.Copy(files, repositoryPath)
+	gibackfs.Copy(files, unit.RepositoryPath)
 
 	log.Println(fmt.Sprintf("Files copied."))
 
-	statusResult := git.Status(repositoryPath, shellRunOptions)
+	statusResult := git.Status(unit.RepositoryPath, shellRunOptions)
 
 	ignoredFiles := utils.StringListDiff(statusFilesBeforeCopy, fileNames)
 
@@ -100,11 +98,11 @@ func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunO
 		))
 	}
 
-	if err = git.Reset(repositoryPath, shellRunOptions); err != nil {
+	if err = git.Reset(unit.RepositoryPath, shellRunOptions); err != nil {
 		log.Fatal("Failed to reset.")
 	}
 
-	err = git.Add(repositoryPath, filesToBeAdded, shellRunOptions)
+	err = git.Add(unit.RepositoryPath, filesToBeAdded, shellRunOptions)
 
 	if err != nil {
 		log.Fatal("Failed to add.")
@@ -112,7 +110,7 @@ func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunO
 
 	log.Println(fmt.Sprintf("Committing: %s", unit.Commit_Message))
 
-	err = git.Commit(repositoryPath, unit.Commit_Message, unit.Author_Name, unit.Author_Email, shellRunOptions)
+	err = git.Commit(unit.RepositoryPath, unit.Commit_Message, unit.Author_Name, unit.Author_Email, shellRunOptions)
 
 	if err != nil {
 		log.Fatal("Failed to commit.", err)
@@ -120,7 +118,7 @@ func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunO
 
 	log.Println(fmt.Sprintf("Pushing..."))
 
-	err = git.Push(repositoryPath, shellRunOptions)
+	err = git.Push(unit.RepositoryPath, shellRunOptions)
 
 	if err != nil {
 		log.Fatal("Failed to push.", err)
@@ -129,16 +127,6 @@ func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunO
 	log.Println(fmt.Sprintf("Done!"))
 
 	return nil
-}
-
-func hasClonedRepository(workspace string, id string) bool {
-	repositoryPath := workspace + "/" + id
-
-	return gibackfs.FolderExists(repositoryPath)
-}
-
-func getRepositoryPath(workspace string, unit app.PushUnit) string {
-	return workspace + "/" + unit.Id
 }
 
 func buildFileListFromStatusResult(statusResults []git.GitStatusResult) []string {
@@ -188,18 +176,17 @@ func checkDependencies(shellRunOptions shell.RunOptions) {
 	}
 }
 
-func checkRepos(config app.Config, workspacePath string, shellRunOptions shell.RunOptions) ([]string, error) {
+func checkRepos(config app.Config, shellRunOptions shell.RunOptions) ([]string, error) {
 	var invalidRepositories []string
 
 	for i := range config.Units {
 		unit := config.Units[i]
-		repositoryPath := fmt.Sprintf("%s/%s", workspacePath, unit.Id)
 
-		if !gibackfs.FolderExists(repositoryPath) {
+		if !gibackfs.FolderExists(unit.RepositoryPath) {
 			continue
 		}
 
-		repositoryMetadata, err := git.GetRepositoryMetadata(repositoryPath, shellRunOptions)
+		repositoryMetadata, err := git.GetRepositoryMetadata(unit.RepositoryPath, shellRunOptions)
 
 		if err != nil {
 			return nil, err
@@ -265,7 +252,7 @@ func runUnitPrepare(c *cli.Context, unitId string) (app.Config, string, shell.Ru
 		))
 	}
 
-	invalidRepos, err := checkRepos(config, workspacePath, shellRunOptions)
+	invalidRepos, err := checkRepos(config, shellRunOptions)
 	if err != nil {
 		return app.Config{}, "", shell.RunOptions{}, err
 	}
