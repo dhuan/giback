@@ -8,7 +8,7 @@ import (
 	"os/exec"
 )
 
-func Run(dir string, command string, env map[string]string, options RunOptions) ([]byte, error) {
+func Run(dir string, command string, options RunOptions) ([]byte, error) {
 	if options.Debug {
 		dirDebug := dir
 
@@ -35,8 +35,8 @@ func Run(dir string, command string, env map[string]string, options RunOptions) 
 
 	cmd.Env = os.Environ()
 
-	if len(env) > 0 {
-		applyEnv(cmd, env)
+	if len(options.Env) > 0 {
+		applyEnv(cmd, options.Env)
 	}
 
 	output, err := cmd.CombinedOutput()
@@ -50,18 +50,19 @@ func Run(dir string, command string, env map[string]string, options RunOptions) 
 
 type RunOptions struct {
 	Debug bool
+    Env   map[string]string
 }
 
 func RunOptionsDefault() RunOptions {
-	return RunOptions{false}
+	return RunOptions{false, make(map[string]string)}
 }
 
-func RunMany(dir string, commands []string, env map[string]string, output *[]byte, shellRunOptions RunOptions) error {
+func RunMany(dir string, commands []string, output *[]byte, shellRunOptions RunOptions) error {
 	if len(commands) == 0 {
 		return nil
 	}
 
-	result, err := Run(dir, commands[0], env, shellRunOptions)
+	result, err := Run(dir, commands[0], shellRunOptions)
 
 	if err != nil {
 		return err
@@ -69,7 +70,7 @@ func RunMany(dir string, commands []string, env map[string]string, output *[]byt
 
 	*output = append(*output, result...)
 
-	return RunMany(dir, commands[1:], env, output, shellRunOptions)
+	return RunMany(dir, commands[1:], output, shellRunOptions)
 }
 
 func parseCommand(command string) (string, []string, error) {

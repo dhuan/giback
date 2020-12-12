@@ -181,7 +181,7 @@ func buildShellRunOptions(context app.Context) shell.RunOptions {
 }
 
 func checkDependencies(shellRunOptions shell.RunOptions) {
-	_, err := shell.Run("", "which git", nil, shellRunOptions)
+	_, err := shell.Run("", "which git", shellRunOptions)
 
 	if err != nil {
 		log.Fatal("Giback requires git. Please make sure you have it installed before trying again.")

@@ -16,7 +16,7 @@ func CheckAccess(workspace string, repository string, shellRunOptions shell.RunO
 
 	command := "git ls-remote " + repository
 
-	_, runErr := shell.Run(workspace, command, nil, shellRunOptions)
+	_, runErr := shell.Run(workspace, command, shellRunOptions)
 
 	if runErr != nil {
 		return false
@@ -28,7 +28,7 @@ func CheckAccess(workspace string, repository string, shellRunOptions shell.RunO
 func Clone(workspace string, repositoryPath string, saveAs string, shellRunOptions shell.RunOptions) error {
 	command := fmt.Sprintf("git clone %s %s", repositoryPath, saveAs)
 
-	_, err := shell.Run(workspace, command, nil, shellRunOptions)
+	_, err := shell.Run(workspace, command, shellRunOptions)
 
 	return err
 }
@@ -36,7 +36,7 @@ func Clone(workspace string, repositoryPath string, saveAs string, shellRunOptio
 func Pull(repositoryPath string, shellRunOptions shell.RunOptions) error {
 	commandFetch := "git fetch"
 
-	_, errFetch := shell.Run(repositoryPath, commandFetch, nil, shellRunOptions)
+	_, errFetch := shell.Run(repositoryPath, commandFetch, shellRunOptions)
 
 	if errFetch != nil {
 		return errFetch
@@ -44,7 +44,7 @@ func Pull(repositoryPath string, shellRunOptions shell.RunOptions) error {
 
 	commandRebase := "git rebase origin/master"
 
-	_, errRebase := shell.Run(repositoryPath, commandRebase, nil, shellRunOptions)
+	_, errRebase := shell.Run(repositoryPath, commandRebase, shellRunOptions)
 
 	if errRebase != nil {
 		return errRebase
@@ -58,7 +58,7 @@ func Status(repositoryPath string, shellRunOptions shell.RunOptions) []GitStatus
 
 	command := fmt.Sprintf("git status --short")
 
-	statusOutput, _ := shell.Run(repositoryPath, command, nil, shellRunOptions)
+	statusOutput, _ := shell.Run(repositoryPath, command, shellRunOptions)
 
 	statusFiles := utils.SedReplaceGlobal(string(statusOutput), `^...`, "")
 
@@ -72,7 +72,7 @@ func Status(repositoryPath string, shellRunOptions shell.RunOptions) []GitStatus
 }
 
 func Reset(repositoryPath string, shellRunOptions shell.RunOptions) error {
-	_, err := shell.Run(repositoryPath, "git reset", nil, shellRunOptions)
+	_, err := shell.Run(repositoryPath, "git reset", shellRunOptions)
 
 	if err != nil {
 		return err
@@ -82,7 +82,7 @@ func Reset(repositoryPath string, shellRunOptions shell.RunOptions) error {
 }
 
 func AddAll(repositoryPath string, shellRunOptions shell.RunOptions) error {
-	_, err := shell.Run(repositoryPath, "git add .", nil, shellRunOptions)
+	_, err := shell.Run(repositoryPath, "git add .", shellRunOptions)
 
 	if err != nil {
 		return err
@@ -96,7 +96,7 @@ func Add(repositoryPath string, files []string, shellRunOptions shell.RunOptions
 
 	command := fmt.Sprintf("git add %s", filesJoined)
 
-	_, err := shell.Run(repositoryPath, command, nil, shellRunOptions)
+	_, err := shell.Run(repositoryPath, command, shellRunOptions)
 
 	if err != nil {
 		return err
@@ -106,18 +106,20 @@ func Add(repositoryPath string, files []string, shellRunOptions shell.RunOptions
 }
 
 func Commit(repositoryPath string, message string, authorName string, authorEmail string, shellRunOptions shell.RunOptions) error {
-	var env map[string]string
+    shellRunOptionsModifiedForCommit := shellRunOptions
 
-	env = make(map[string]string)
+    if len(shellRunOptionsModifiedForCommit.Env) == 0 {
+        shellRunOptionsModifiedForCommit.Env = make(map[string]string)
+    }
 
-	env["GIT_COMMITTER_NAME"] = authorName
-	env["GIT_COMMITTER_EMAIL"] = authorEmail
-	env["GIT_AUTHOR_NAME"] = authorName
-	env["GIT_AUTHOR_EMAIL"] = authorEmail
+	shellRunOptionsModifiedForCommit.Env["GIT_COMMITTER_NAME"] = authorName
+	shellRunOptionsModifiedForCommit.Env["GIT_COMMITTER_EMAIL"] = authorEmail
+	shellRunOptionsModifiedForCommit.Env["GIT_AUTHOR_NAME"] = authorName
+	shellRunOptionsModifiedForCommit.Env["GIT_AUTHOR_EMAIL"] = authorEmail
 
 	command := fmt.Sprintf("git commit -m \"%s\"", message)
 
-	_, err := shell.Run(repositoryPath, command, env, shellRunOptions)
+	_, err := shell.Run(repositoryPath, command, shellRunOptionsModifiedForCommit)
 
 	if err != nil {
 		return err
@@ -127,7 +129,7 @@ func Commit(repositoryPath string, message string, authorName string, authorEmai
 }
 
 func Push(repositoryPath string, shellRunOptions shell.RunOptions) error {
-	_, err := shell.Run(repositoryPath, "git push origin master", nil, shellRunOptions)
+	_, err := shell.Run(repositoryPath, "git push origin master", shellRunOptions)
 
 	if err != nil {
 		return err
@@ -141,7 +143,7 @@ func GetRepositoryMetadata(repositoryPath string, shellRunOptions shell.RunOptio
 		return RepositoryMetadata{}, nil
 	}
 
-	output, err := shell.Run(repositoryPath, "git config --get remote.origin.url", nil, shellRunOptions)
+	output, err := shell.Run(repositoryPath, "git config --get remote.origin.url", shellRunOptions)
 
 	if err != nil {
 		return RepositoryMetadata{}, err

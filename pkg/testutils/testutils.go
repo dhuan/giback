@@ -47,7 +47,7 @@ func RunGiback(command string, options RunGibackOptions) ([]byte, error) {
 
 	commandTranformed := fmt.Sprintf("./giback -w %s -c %s %s", workspacePath, configPath, command)
 
-	output, err := shell.Run(gibackRootPath, commandTranformed, nil, shell.RunOptionsDefault())
+	output, err := shell.Run(gibackRootPath, commandTranformed, shell.RunOptionsDefault())
 
 	if err != nil {
 		return output, err
@@ -154,7 +154,7 @@ func getGitLog(repositoryFolder string) []string {
 
 	command := "ssh -i ./test/tmp/id_rsa git@localhost -p 2222 \"git -C /srv/git/" + repositoryFolder + ".git log --pretty='format:%cn <%ce> %s'\""
 
-	output, err := shell.Run(gibackRootPath, command, nil, shell.RunOptionsDefault())
+	output, err := shell.Run(gibackRootPath, command, shell.RunOptionsDefault())
 
 	if err != nil {
 		return []string{}
@@ -215,7 +215,7 @@ func resetTestRepository(workingDir string) {
 		"ssh -i ./test/tmp/id_rsa git@localhost -p 2222 \"cd /srv/git/test2.git && rm -rf ./* && git init --bare\"",
 	}
 
-	err := shell.RunMany(workingDir, commands, nil, &output, shell.RunOptionsDefault())
+	err := shell.RunMany(workingDir, commands, &output, shell.RunOptionsDefault())
 
 	if err != nil {
 		log.Println(fmt.Sprintf("An error occurred while trying to reset the test repository:\n%s", output))
@@ -232,7 +232,7 @@ func emptyWorkspace(workingDir string) {
 		fmt.Sprintf("rm -rf %s/test/tmp/workspace/another_backup", workingDir),
 	}
 
-	err := shell.RunMany(workingDir, commands, nil, &output, shell.RunOptionsDefault())
+	err := shell.RunMany(workingDir, commands, &output, shell.RunOptionsDefault())
 
 	if err != nil {
 		log.Println(fmt.Sprintf("An error occurred while trying to empty the test workspaces:\n%s", output))
