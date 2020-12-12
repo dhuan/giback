@@ -50,7 +50,7 @@ func Run(dir string, command string, options RunOptions) ([]byte, error) {
 
 type RunOptions struct {
 	Debug bool
-    Env   map[string]string
+	Env   map[string]string
 }
 
 func RunOptionsDefault() RunOptions {
@@ -94,5 +94,5 @@ func applyEnv(cmd *exec.Cmd, env map[string]string) {
 }
 
 func toEnvVariable(key string, value string) string {
-	return fmt.Sprintf("%s=\"%s\"", key, value)
+	return fmt.Sprintf("%s=%s", key, value)
 }
