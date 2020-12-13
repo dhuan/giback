@@ -12,6 +12,7 @@ units:
   author_name: Someone
   author_email: someone@example.com
   commit_message: "Backing up!"
+  ssh_key: /path/to/a/ssh_key/id_rsa
   files:
   - "/path/to/some/folder/*.txt"
   - "/path/to/another/folder/*.jpg"
@@ -22,6 +23,7 @@ units:
   author_name: Someone
   author_email: someone@example.com
   commit_message: "Backing up!"
+  ssh_key: /path/to/a/ssh_key/id_rsa
   files:
   - "/path/to/some/folder/*.txt"
   - "/path/to/another/folder/*.jpg"
