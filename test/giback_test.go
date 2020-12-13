@@ -216,6 +216,61 @@ func TestFailRunningSingleWithInvalidConfigMissingFields(t *testing.T) {
 	})
 }
 
+func TestBackupSuccessfullyWithCustomKey(t *testing.T) {
+	testutils.ResetTestEnvironment()
+
+	output, _ := testutils.RunGiback("my_backup", testutils.RunGibackOptions{
+		ConfigFile: "with_keys",
+	})
+
+	testutils.AssertOutput(t, output, []string{
+		"Running unit 'my_backup'.",
+		"Repository has not been cloned yet. Will clone now: ssh://git@localhost:2222/srv/git/test.git",
+		"Identifying files...",
+		withFullPath("backup_files/another_file.txt"),
+		withFullPath("backup_files/some_file.txt"),
+		"Files copied.",
+		"Files affected in the repository: another_file.txt,some_file.txt",
+		"Committing: Backing up!",
+		"Pushing...",
+		"Done!",
+	})
+
+	testutils.AssertGitLog(t, "test", []string{
+		"Super Man <superman@example.com> Backing up!",
+	})
+}
+
+func TestFailSingleWithCustomKey(t *testing.T) {
+	testutils.ResetTestEnvironment()
+
+	output, err := testutils.RunGiback("another_backup", testutils.RunGibackOptions{
+		ConfigFile: "with_keys",
+	})
+
+	testutils.AssertHasError(t, err)
+
+	testutils.AssertOutput(t, output, []string{
+		"The following repositories failed to be communicated with. Please verify that you indeed have access to these repositories.",
+		"ssh://git@localhost:2222/srv/git/test2.git",
+	})
+}
+
+func TestFailAllWithCustomKey(t *testing.T) {
+	testutils.ResetTestEnvironment()
+
+	output, err := testutils.RunGiback("all", testutils.RunGibackOptions{
+		ConfigFile: "with_keys",
+	})
+
+	testutils.AssertHasError(t, err)
+
+	testutils.AssertOutput(t, output, []string{
+		"The following repositories failed to be communicated with. Please verify that you indeed have access to these repositories.",
+		"ssh://git@localhost:2222/srv/git/test2.git",
+	})
+}
+
 func withFullPath(path string) string {
 	pwd, _ := os.Getwd()
 

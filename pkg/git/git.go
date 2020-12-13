@@ -71,6 +71,14 @@ func Status(repositoryPath string, shellRunOptions shell.RunOptions) []GitStatus
 	return result
 }
 
+func LsRemote(repository string, shellRunOptions shell.RunOptions) error {
+	command := fmt.Sprintf("git ls-remote %s", repository)
+
+	_, err := shell.Run("", command, shellRunOptions)
+
+	return err
+}
+
 func Reset(repositoryPath string, shellRunOptions shell.RunOptions) error {
 	_, err := shell.Run(repositoryPath, "git reset", shellRunOptions)
 
@@ -106,11 +114,11 @@ func Add(repositoryPath string, files []string, shellRunOptions shell.RunOptions
 }
 
 func Commit(repositoryPath string, message string, authorName string, authorEmail string, shellRunOptions shell.RunOptions) error {
-    shellRunOptionsModifiedForCommit := shellRunOptions
+	shellRunOptionsModifiedForCommit := shellRunOptions
 
-    if len(shellRunOptionsModifiedForCommit.Env) == 0 {
-        shellRunOptionsModifiedForCommit.Env = make(map[string]string)
-    }
+	if len(shellRunOptionsModifiedForCommit.Env) == 0 {
+		shellRunOptionsModifiedForCommit.Env = make(map[string]string)
+	}
 
 	shellRunOptionsModifiedForCommit.Env["GIT_COMMITTER_NAME"] = authorName
 	shellRunOptionsModifiedForCommit.Env["GIT_COMMITTER_EMAIL"] = authorEmail

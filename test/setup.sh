@@ -4,6 +4,9 @@ rm -f ./test/tmp/id_rsa*
 # Generate new SSH keys that will be used by Giback.
 ssh-keygen -t rsa -f ./test/tmp/id_rsa -q -N ""
 
+# Generate a new SSH key to assert that invalid keys are dealt with
+ssh-keygen -t rsa -f ./test/tmp/id_rsa_invalid -q -N ""
+
 # Build a simple image containing a git server where backup repositories will exist that Giback will push to.
 # If an image has been created already, this step will be skipped.
 if ! podman image exists giback_test_git_server

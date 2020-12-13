@@ -13,4 +13,5 @@ type PushUnit struct {
 	Commit_Message string
 	Author_Name    string
 	Author_Email   string
+	Ssh_Key        string
 }

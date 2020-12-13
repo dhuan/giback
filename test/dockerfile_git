@@ -10,7 +10,7 @@ RUN apt update \
   && chown -R git /home/git \
   && mkdir /srv/git \
   && chown git /srv/git \
-  && echo "Port 22\nAddressFamily any\nListenAddress 0.0.0.0" >> /etc/ssh/sshd_config
+  && echo "Port 22\nAddressFamily any\nListenAddress 0.0.0.0\nPasswordAuthentication no" >> /etc/ssh/sshd_config
 
 
 CMD ["bash", "/giback_test/setup_container.sh"]

@@ -271,6 +271,25 @@ func runUnitPrepare(c *cli.Context, unitId string) (app.Config, string, shell.Ru
 		))
 	}
 
+	unitsWithFailedAccess, err := validateAccess(units, shellRunOptions)
+
+	if err != nil {
+		return app.Config{}, "", shell.RunOptions{}, err
+	}
+
+	repositoriesWithFailedAccess := make([]string, len(unitsWithFailedAccess))
+
+	for i := range unitsWithFailedAccess {
+		repositoriesWithFailedAccess[i] = unitsWithFailedAccess[i].Repository
+	}
+
+	if len(unitsWithFailedAccess) > 0 {
+		return app.Config{}, "", shell.RunOptions{}, errors.New(fmt.Sprintf(
+			"The following repositories failed to be communicated with. Please verify that you indeed have access to these repositories.\n\n%s",
+			strings.Join(repositoriesWithFailedAccess, "\n"),
+		))
+	}
+
 	return config, workspacePath, shellRunOptions, nil
 }
 
@@ -282,4 +301,49 @@ func buildInvalidUnitsErrorMessage(invalidUnitErrorMessage []string, unitIds []s
 	}
 
 	return strings.Join(messages, "\n\n")
+}
+
+func validateAccess(units []app.PushUnit, shellRunOptions shell.RunOptions) ([]app.PushUnit, error) {
+	var unitsWithInvalidSshKeys []app.PushUnit
+
+	for i := range units {
+		unit := units[i]
+
+		valid, err := validateAccessSingle(unit, shellRunOptions)
+
+		if !valid || err != nil {
+			unitsWithInvalidSshKeys = append(unitsWithInvalidSshKeys, unit)
+		}
+	}
+
+	return unitsWithInvalidSshKeys, nil
+}
+
+func validateAccessSingle(unit app.PushUnit, shellRunOptions shell.RunOptions) (bool, error) {
+	shellOptionsModified := modifyShellRunOptionsForUnit(unit, shellRunOptions)
+
+	err := git.LsRemote(unit.Repository, shellOptionsModified)
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func modifyShellRunOptionsForUnit(unit app.PushUnit, base shell.RunOptions) shell.RunOptions {
+	if unit.Ssh_Key == "" {
+		return base
+	}
+
+	newOptions := base
+
+	if len(newOptions.Env) == 0 {
+		newOptions.Env = make(map[string]string)
+	}
+
+	newOptions.Env["GIT_SSH_COMMAND"] = fmt.Sprintf("ssh -i %s", unit.Ssh_Key)
+	newOptions.Env["GIT_SSH_VARIANT"] = "ssh"
+
+	return newOptions
 }
