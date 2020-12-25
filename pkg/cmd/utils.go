@@ -342,7 +342,13 @@ func modifyShellRunOptionsForUnit(unit app.PushUnit, base shell.RunOptions) shel
 		newOptions.Env = make(map[string]string)
 	}
 
-	newOptions.Env["GIT_SSH_COMMAND"] = fmt.Sprintf("ssh -i %s", unit.Ssh_Key)
+	pwd, _ := os.Getwd()
+	vars := make(map[string]string)
+	vars["PWD"] = pwd
+
+	sshKey := evaluate(vars, unit.Ssh_Key)
+
+	newOptions.Env["GIT_SSH_COMMAND"] = fmt.Sprintf("ssh -i %s", sshKey)
 	newOptions.Env["GIT_SSH_VARIANT"] = "ssh"
 
 	return newOptions

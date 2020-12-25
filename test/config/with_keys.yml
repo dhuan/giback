@@ -4,7 +4,7 @@ units:
   author_name: Super Man
   author_email: superman@example.com
   commit_message: 'Backing up!'
-  ssh_key: /development/github.com/dhuan/giback/test/tmp/id_rsa
+  ssh_key: "{PWD}/test/tmp/id_rsa"
   files:
   - "{PWD}/test/backup_files/*.txt"
   exclude:
@@ -14,6 +14,6 @@ units:
   author_name: Someone
   author_email: someone@example.com
   commit_message: 'Backup.'
-  ssh_key: /development/github.com/dhuan/giback/test/tmp/id_rsa_invalid
+  ssh_key: "{PWD}/test/tmp/id_rsa_invalid"
   files:
   - "{PWD}/test/backup_files/some_file.txt"
