@@ -315,7 +315,7 @@ func modifyShellRunOptionsForUnit(unit app.PushUnit, base shell.RunOptions) shel
 
 	sshKey := utils.EvaluateStandardVariables(unit.Ssh_Key)
 
-	newOptions.Env["GIT_SSH_COMMAND"] = fmt.Sprintf("ssh -i %s", sshKey)
+	newOptions.Env["GIT_SSH_COMMAND"] = fmt.Sprintf("ssh -o StrictHostKeyChecking=no -i %s", sshKey)
 	newOptions.Env["GIT_SSH_VARIANT"] = "ssh"
 
 	return newOptions

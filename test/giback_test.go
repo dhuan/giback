@@ -15,7 +15,7 @@ func TestBackupSuccessfully(t *testing.T) {
 
 	testutils.AssertOutput(t, output, []string{
 		"Running unit 'my_backup'.",
-		"Repository has not been cloned yet. Will clone now: ssh://git@localhost:2222/srv/git/test.git",
+		"Repository has not been cloned yet. Will clone now: ssh://git@localhost/srv/git/test.git",
 		"Identifying files...",
 		withFullPath("backup_files/another_file.txt"),
 		withFullPath("backup_files/some_file.txt"),
@@ -38,7 +38,7 @@ func TestBackupSuccessfullyAll(t *testing.T) {
 
 	testutils.AssertOutput(t, output, []string{
 		"Running unit 'my_backup'.",
-		"Repository has not been cloned yet. Will clone now: ssh://git@localhost:2222/srv/git/test.git",
+		"Repository has not been cloned yet. Will clone now: ssh://git@localhost/srv/git/test.git",
 		"Identifying files...",
 		withFullPath("backup_files/another_file.txt"),
 		withFullPath("backup_files/some_file.txt"),
@@ -48,7 +48,7 @@ func TestBackupSuccessfullyAll(t *testing.T) {
 		"Pushing...",
 		"Done!",
 		"Running unit 'another_backup'.",
-		"Repository has not been cloned yet. Will clone now: ssh://git@localhost:2222/srv/git/test2.git",
+		"Repository has not been cloned yet. Will clone now: ssh://git@localhost/srv/git/test2.git",
 		"Identifying files...",
 		withFullPath("backup_files/some_file.txt"),
 		"Files copied.",
@@ -225,7 +225,7 @@ func TestBackupSuccessfullyWithCustomKey(t *testing.T) {
 
 	testutils.AssertOutput(t, output, []string{
 		"Running unit 'my_backup'.",
-		"Repository has not been cloned yet. Will clone now: ssh://git@localhost:2222/srv/git/test.git",
+		"Repository has not been cloned yet. Will clone now: ssh://git@localhost/srv/git/test.git",
 		"Identifying files...",
 		withFullPath("backup_files/another_file.txt"),
 		withFullPath("backup_files/some_file.txt"),
@@ -252,7 +252,7 @@ func TestFailSingleWithCustomKey(t *testing.T) {
 
 	testutils.AssertOutput(t, output, []string{
 		"The following repositories failed to be communicated with. Please verify that you indeed have access to these repositories.",
-		"ssh://git@localhost:2222/srv/git/test2.git",
+		"ssh://git@localhost/srv/git/test2.git",
 	})
 }
 
@@ -267,7 +267,7 @@ func TestFailAllWithCustomKey(t *testing.T) {
 
 	testutils.AssertOutput(t, output, []string{
 		"The following repositories failed to be communicated with. Please verify that you indeed have access to these repositories.",
-		"ssh://git@localhost:2222/srv/git/test2.git",
+		"ssh://git@localhost/srv/git/test2.git",
 	})
 }
 

@@ -45,7 +45,7 @@ func RunGiback(command string, options RunGibackOptions) ([]byte, error) {
 		configPath = fmt.Sprintf("./test/config/%s.yml", options.ConfigFile)
 	}
 
-	commandTranformed := fmt.Sprintf("./giback -w %s -c %s %s", workspacePath, configPath, command)
+	commandTranformed := fmt.Sprintf("./bin/giback -w %s -c %s %s", workspacePath, configPath, command)
 
 	output, err := shell.Run(gibackRootPath, commandTranformed, shell.RunOptionsDefault())
 
@@ -152,7 +152,7 @@ func getGitLog(repositoryFolder string) []string {
 	workingDir, _ := os.Getwd()
 	gibackRootPath := fmt.Sprintf("%s/..", workingDir)
 
-	command := "ssh -i ./test/tmp/id_rsa git@localhost -p 2222 \"git -C /srv/git/" + repositoryFolder + ".git log --pretty='format:%cn <%ce> %s'\""
+	command := "ssh -i ./test/tmp/id_rsa git@localhost \"git -C /srv/git/" + repositoryFolder + ".git log --pretty='format:%cn <%ce> %s'\""
 
 	output, err := shell.Run(gibackRootPath, command, shell.RunOptionsDefault())
 
@@ -211,11 +211,28 @@ func resetTestRepository(workingDir string) {
 	var output []byte
 
 	commands := []string{
-		"ssh -i ./test/tmp/id_rsa git@localhost -p 2222 \"cd /srv/git/test.git && rm -rf ./* && git init --bare\"",
-		"ssh -i ./test/tmp/id_rsa git@localhost -p 2222 \"cd /srv/git/test2.git && rm -rf ./* && git init --bare\"",
+		"rm -rf /srv/git/test.git",
+		"mkdir /srv/git/test.git",
+		"git init --bare /srv/git/test.git",
+		"chmod -R 777 /srv/git/test.git",
 	}
 
-	err := shell.RunMany(workingDir, commands, &output, shell.RunOptionsDefault())
+	commands2 := []string{
+		"rm -rf /srv/git/test2.git",
+		"mkdir /srv/git/test2.git",
+		"git init --bare /srv/git/test2.git",
+		"chmod -R 777 /srv/git/test2.git",
+	}
+
+	err := shell.RunMany("/srv/git", commands, &output, shell.RunOptionsDefault())
+
+	if err != nil {
+		log.Println(fmt.Sprintf("An error occurred while trying to reset the test repository:\n%s", output))
+
+		log.Fatal(err)
+	}
+
+	err = shell.RunMany("/srv/git", commands2, &output, shell.RunOptionsDefault())
 
 	if err != nil {
 		log.Println(fmt.Sprintf("An error occurred while trying to reset the test repository:\n%s", output))

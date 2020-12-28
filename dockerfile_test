@@ -1,0 +1,22 @@
+FROM ubuntu:20.04
+
+COPY . /giback_source
+
+RUN apt update \
+  && DEBIAN_FRONTEND="noninteractive" apt install --yes git openssh-server golang make \
+  && useradd -m git \
+  && mkdir /home/git/.ssh \
+  && chmod 700 /home/git/.ssh \
+  && touch /home/git/.ssh/authorized_keys \
+  && chmod 600 /home/git/.ssh/authorized_keys \
+  && chown -R git /home/git \
+  && mkdir /srv/git \
+  && chown git /srv/git \
+  && echo "Port 22" >> /etc/ssh/sshd_config \
+  && echo "AddressFamily any" >> /etc/ssh/sshd_config \
+  && echo "ListenAddress 0.0.0.0" >> /etc/ssh/sshd_config \
+  && echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+
+RUN cd /giback_source && make build
+
+CMD ["bash", "/giback/test/giback_test_entrypoint.sh"]
