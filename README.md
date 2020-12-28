@@ -1,5 +1,7 @@
 # Giback - Backup your files to Git
 
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/dhuan/giback/Go?logo=github&style=for-the-badge)](https://github.com/dhuan/giback/actions?query=workflow%3AGo)
+
 ## Usage
 
 Giback relies on a configuration file at your home folder in order to know which files to backup and to what repositories:
