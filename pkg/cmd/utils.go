@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"os"
 	"strings"
 
 	"github.com/urfave/cli/v2"
@@ -46,14 +45,9 @@ func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunO
 
 	log.Println(fmt.Sprintf("Identifying files..."))
 
-	pwd, _ := os.Getwd()
+	filePatterns := utils.EvaluateManyStandardVariables(unit.Files)
 
-	vars := make(map[string]string)
-	vars["PWD"] = pwd
-
-	filePatterns := evaluateMany(vars, unit.Files)
-
-	excludePatterns := evaluateMany(vars, unit.Exclude)
+	excludePatterns := utils.EvaluateManyStandardVariables(unit.Exclude)
 
 	files := gibackfs.ScanDirMany(filePatterns, excludePatterns)
 
@@ -137,29 +131,6 @@ func buildFileListFromStatusResult(statusResults []git.GitStatusResult) []string
 	}
 
 	return fileList
-}
-
-func evaluateMany(vars map[string]string, strings []string) []string {
-	stringsTransformed := make([]string, len(strings))
-
-	for i := range strings {
-		stringsTransformed[i] = evaluate(vars, strings[i])
-	}
-
-	return stringsTransformed
-}
-
-func evaluate(vars map[string]string, str string) string {
-	result := str
-
-	for i, v := range vars {
-		search := fmt.Sprintf("{%s}", i)
-		replace := v
-
-		result = strings.ReplaceAll(str, search, replace)
-	}
-
-	return result
 }
 
 func buildShellRunOptions(context app.Context) shell.RunOptions {
@@ -342,11 +313,7 @@ func modifyShellRunOptionsForUnit(unit app.PushUnit, base shell.RunOptions) shel
 		newOptions.Env = make(map[string]string)
 	}
 
-	pwd, _ := os.Getwd()
-	vars := make(map[string]string)
-	vars["PWD"] = pwd
-
-	sshKey := evaluate(vars, unit.Ssh_Key)
+	sshKey := utils.EvaluateStandardVariables(unit.Ssh_Key)
 
 	newOptions.Env["GIT_SSH_COMMAND"] = fmt.Sprintf("ssh -i %s", sshKey)
 	newOptions.Env["GIT_SSH_VARIANT"] = "ssh"

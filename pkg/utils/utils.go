@@ -2,6 +2,8 @@ package utils
 
 import (
 	"encoding/csv"
+	"fmt"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -125,4 +127,42 @@ func FilterOutMatching(list []string, matches []string) []string {
 	}
 
 	return newList
+}
+
+func EvaluateMany(vars map[string]string, strings []string) []string {
+	stringsTransformed := make([]string, len(strings))
+
+	for i := range strings {
+		stringsTransformed[i] = Evaluate(vars, strings[i])
+	}
+
+	return stringsTransformed
+}
+
+func Evaluate(vars map[string]string, str string) string {
+	result := str
+
+	for i, v := range vars {
+		search := fmt.Sprintf("{%s}", i)
+		replace := v
+
+		result = strings.ReplaceAll(str, search, replace)
+	}
+
+	return result
+}
+
+func EvaluateManyStandardVariables(strings []string) []string {
+	pwd, _ := os.Getwd()
+
+	vars := make(map[string]string)
+	vars["PWD"] = pwd
+
+	return EvaluateMany(vars, strings)
+}
+
+func EvaluateStandardVariables(str string) string {
+	result := EvaluateManyStandardVariables([]string{str})
+
+	return result[0]
 }
