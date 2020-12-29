@@ -5,3 +5,4 @@ test/tmp/workspace/another_backup
 test/backup_files/*.txt
 test/backup_files/*.html
 bin/
+release_downloads
