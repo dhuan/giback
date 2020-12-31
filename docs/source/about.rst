@@ -38,4 +38,3 @@ Resources
 - Downloads: https://github.com/dhuan/giback/releases
 - Source code/Git URL: git://github.com/dhuan/giback.git
 
-
