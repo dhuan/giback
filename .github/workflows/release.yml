@@ -24,6 +24,8 @@ jobs:
       run: bash scripts/create_assets.sh
 
     - name: Release
-      run: bash scripts/create_release.sh
+      run: |
+          make docs_build_pdf
+          bash scripts/create_release.sh
       env:
           GH_KEY: ${{ secrets.GH_KEY }}
