@@ -13,6 +13,13 @@ git checkout gh-pages
 
 cp -r ./docs/build/html ./public
 
+FILES_TO_REPLACE=$(grep -rl '%GIBACK_VERSION%' docs | grep '\.html$')
+
+for FILE in "$FILES_TO_REPLACE"
+do
+    sed -i 's/%GIBACK_VERSION%/1.0/g' $FILE
+done
+
 git add ./public
 
 git commit -m "Update docs"
