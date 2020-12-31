@@ -5,7 +5,11 @@ git config --global user.name "Giback Bot"
 
 git remote set-url origin https://giback:$GH_KEY_DOCS@github.com/dhuan/giback.git
 
-git checkout origin/gh-pages
+echo "!!!!!!!!!!!!!!!!!!!!!!"
+ls -la
+git fetch
+
+git checkout gh-pages
 
 cp -r ./docs/build/html ./public
 
