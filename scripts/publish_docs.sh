@@ -13,11 +13,13 @@ git checkout gh-pages
 
 cp -r ./docs/build/html ./public
 
+LATEST_VERSION=$(git tag | tac | head -n 1)
+
 FILES_TO_REPLACE=$(grep -rl '%GIBACK_VERSION%' public | grep '\.html$')
 
 for FILE in "$FILES_TO_REPLACE"
 do
-    sed -i 's/%GIBACK_VERSION%/1.0/g' $FILE
+    sed -i "s/%GIBACK_VERSION%/$LATEST_VERSION/g" $FILE
 done
 
 git add ./public
