@@ -6,3 +6,5 @@ test/backup_files/*.txt
 test/backup_files/*.html
 bin/
 release_downloads
+docs/build
+docs/source/_themes
