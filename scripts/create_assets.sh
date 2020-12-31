@@ -33,7 +33,7 @@ do
     cp ./LICENSE $TARGET_PATH/.
     cp ./docs/build/latex/*.pdf $TARGET_PATH/.
 
-    GOOS=$GOOS GOARCH=$GOARCH go build -o $TARGET_PATH/giback
+    GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "-X main.version=$GIBACK_VERSION" -o $TARGET_PATH/giback
 done
 
 TARGET_FOLDERS=$(ls ./release_downloads)
