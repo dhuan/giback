@@ -1,0 +1,19 @@
+name: Publish Docs
+
+on:                                                                                                                                                           
+  push:                                                                                                                                                       
+    paths:                                                                                                                                                    
+      - '**.rst'
+
+jobs:
+
+  publish_docs:
+    name: Publish Docs
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Build sphinx documentation
+      run: make docs_build
