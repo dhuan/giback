@@ -16,4 +16,6 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build sphinx documentation
-      run: make docs_build
+      run: |
+          make docs_build_pdf
+          make docs_build
