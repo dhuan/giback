@@ -11,9 +11,10 @@ import (
 
 func main() {
 	app := &cli.App{
-		Name:   "giback",
-		Usage:  "Easily backup any files to git repositories.",
-		Action: cmd.Default,
+		Name:    "giback",
+		Version: getVersion(),
+		Usage:   "Easily backup any files to git repositories.",
+		Action:  cmd.Default,
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "c",
@@ -39,8 +40,24 @@ func main() {
 		},
 	}
 
+	cli.VersionFlag = &cli.BoolFlag{
+		Name:    "version",
+		Aliases: []string{"V"},
+		Usage:   "print only the version",
+	}
+
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func getVersion() string {
+	version := os.Getenv("GIBACK_VERSION")
+
+	if version == "" {
+		return "DEVELOPMENT"
+	}
+
+	return version
 }

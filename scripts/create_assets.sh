@@ -1,6 +1,6 @@
 set -ex
 
-GIBACK_VERSION=$(echo $GITHUB_REF | cut -d '/' -f 3)
+export GIBACK_VERSION=$(echo $GITHUB_REF | cut -d '/' -f 3)
 
 TARGETS=(
     "linux,386"
