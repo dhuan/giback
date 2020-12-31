@@ -19,3 +19,6 @@ jobs:
       run: |
           make docs_build_pdf
           make docs_build
+          bash scripts/publish_docs.sh
+      env:
+          GH_KEY_DOCS: ${{ secrets.GH_KEY_DOCS }}
