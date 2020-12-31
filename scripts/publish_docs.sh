@@ -9,8 +9,6 @@ git checkout .
 
 git remote set-url origin https://giback:$GH_KEY_DOCS@github.com/dhuan/giback.git
 
-echo "!!!!!!!!!!!!!!!!!!!!!!"
-ls -la
 git fetch
 
 git checkout gh-pages
