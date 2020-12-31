@@ -24,14 +24,8 @@ to backup your files.
 Get it now
 ----------
 
-If you have Go installed, you can quickly install Giback:
-
-.. code:: shell
-
-    $ go get github.com/dhuan/giback
-
-The ``giback`` executable utility should then be available for you. If not,
-check if the ``GOBIN`` or ``GOPATH`` environment variables are set properly.
+- `Download Giback for Linux <https://github.com/dhuan/giback/releases/download/%GIBACK_VERSION%/giback_%GIBACK_VERSION%_linux-386.zip>`_
+- `Download Giback for Mac <https://github.com/dhuan/giback/releases/download/%GIBACK_VERSION%/giback_%GIBACK_VERSION%_darwin-amd64.zip>`_
 
 .. Note::
 
