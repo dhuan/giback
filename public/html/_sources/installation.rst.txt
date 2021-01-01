@@ -9,8 +9,8 @@ Or also from your terminal:
 
 .. code:: sh
 
-    $ wget https://github.com/dhuan/giback/releases/download/v0.1.0-beta-3/giback_v0.1.0-beta-3_linux-386.zip
-    $ unzip giback_v0.1.0-beta-3_linux-386.zip
+    $ wget https://github.com/dhuan/giback/releases/download/%GIBACK_VERSION%/giback_%GIBACK_VERSION%_linux-386.zip
+    $ unzip giback_%GIBACK_VERSION%_linux-386.zip
     $ chmod u+x giback
     $ ./giback --help
 
