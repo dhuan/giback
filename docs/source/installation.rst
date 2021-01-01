@@ -22,7 +22,7 @@ From source
     $ git clone
     $ cd giback
     $ make build
-    $ ./giback --help
+    $ ./bin/giback --help
 
 Giback's execution logic is independent of which directory you're currently
 located. You can make it easier to execute Giback without needing to be at the
@@ -30,7 +30,7 @@ source code folder:
 
 .. code:: sh
 
-   $ ln -s $(pwd)/bin/giback ~/bin/giback
+   $ ln -s ./bin/giback ~/bin/giback
    $ giback --help
 
 
