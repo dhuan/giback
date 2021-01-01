@@ -1,0 +1,26 @@
+name: Publish Docs
+
+on:                                                                                                                                                           
+  push:                                                                                                                                                       
+    branches:
+      - master
+    paths:                                                                                                                                                    
+      - '**.rst'
+
+jobs:
+
+  publish_docs:
+    name: Publish Docs
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Build sphinx documentation
+      run: |
+          make docs_build_pdf
+          make docs_build
+          bash scripts/publish_docs.sh
+      env:
+          GH_KEY_DOCS: ${{ secrets.GH_KEY_DOCS }}
