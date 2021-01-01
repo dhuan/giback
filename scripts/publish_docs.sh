@@ -24,6 +24,6 @@ done
 
 git add ./public
 
-git commit -m "Update docs"
+git commit -m "Update docs" || true
 
 git push origin gh-pages
