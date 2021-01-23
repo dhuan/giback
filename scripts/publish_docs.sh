@@ -15,6 +15,11 @@ mv docs sphinx_docs
 
 cp -r ./sphinx_docs/build/html ./docs
 
+if [ ! -f './docs/.nojekyll' ]
+then
+    touch ./docs/.nojekyll
+fi
+
 LATEST_VERSION=$(git tag | tac | head -n 1)
 
 FILES_TO_REPLACE=$(grep -rl '%GIBACK_VERSION%' docs | grep '\.html$')
