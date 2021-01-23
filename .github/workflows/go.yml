@@ -4,6 +4,7 @@ on:
   push:                                                                                                                                                       
     paths:                                                                                                                                                    
       - '**.go'
+      - '**.sh'
 
 jobs:
 
@@ -35,5 +36,4 @@ jobs:
       env:
         GIBACK_TESTS_USE_DOCKER: true
       run: |
-          make build
           make tests
