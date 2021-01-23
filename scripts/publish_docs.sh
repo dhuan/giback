@@ -11,18 +11,20 @@ git fetch
 
 git checkout gh-pages
 
-cp -r ./docs/build/html ./docs
+mv docs sphinx_docs
+
+cp -r ./sphinx_docs/build/html ./docs
 
 LATEST_VERSION=$(git tag | tac | head -n 1)
 
-FILES_TO_REPLACE=$(grep -rl '%GIBACK_VERSION%' public | grep '\.html$')
+FILES_TO_REPLACE=$(grep -rl '%GIBACK_VERSION%' docs | grep '\.html$')
 
 for FILE in "$FILES_TO_REPLACE"
 do
     sed -i "s/%GIBACK_VERSION%/$LATEST_VERSION/g" $FILE
 done
 
-git add ./public
+git add ./docs
 
 git commit -m "Update docs" || true
 
