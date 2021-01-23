@@ -4,8 +4,10 @@ on:
   push:                                                                                                                                                       
     branches:
       - master
+      - docs_folder
     paths:                                                                                                                                                    
       - '**.rst'
+      - '.github/workflows/docs.yml'
 
 jobs:
 

@@ -11,7 +11,7 @@ git fetch
 
 git checkout gh-pages
 
-cp -r ./docs/build/html ./public
+cp -r ./docs/build/html ./docs
 
 LATEST_VERSION=$(git tag | tac | head -n 1)
 
