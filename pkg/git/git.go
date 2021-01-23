@@ -137,7 +137,7 @@ func Commit(repositoryPath string, message string, authorName string, authorEmai
 }
 
 func Push(repositoryPath string, shellRunOptions shell.RunOptions) error {
-	_, err := shell.Run(repositoryPath, "git push origin master", shellRunOptions)
+	_, err := shell.Run(repositoryPath, "git push origin", shellRunOptions)
 
 	if err != nil {
 		return err
