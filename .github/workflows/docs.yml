@@ -6,9 +6,9 @@ on:
       - master
     paths:                                                                                                                                                    
       - '**.rst'
+      - '.github/workflows/docs.yml'
 
 jobs:
-
   publish_docs:
     name: Publish Docs
     runs-on: ubuntu-latest

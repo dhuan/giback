@@ -7,22 +7,29 @@ git checkout .
 
 git remote set-url origin https://giback:$GH_KEY_DOCS@github.com/dhuan/giback.git
 
-git fetch
+git fetch --tags --prune --unshallow
 
 git checkout gh-pages
 
-cp -r ./docs/build/html ./public
+mv docs sphinx_docs
 
-LATEST_VERSION=$(git tag | tac | head -n 1)
+cp -r ./sphinx_docs/build/html ./docs
 
-FILES_TO_REPLACE=$(grep -rl '%GIBACK_VERSION%' public | grep '\.html$')
+if [ ! -f './docs/.nojekyll' ]
+then
+    touch ./docs/.nojekyll
+fi
+
+LATEST_VERSION=$(git describe --tags --abbrev=0 origin/master)
+
+FILES_TO_REPLACE=$(grep -rl '%GIBACK_VERSION%' docs | grep '\.html$')
 
 for FILE in "$FILES_TO_REPLACE"
 do
     sed -i "s/%GIBACK_VERSION%/$LATEST_VERSION/g" $FILE
 done
 
-git add ./public
+git add ./docs
 
 git commit -m "Update docs" || true
 
