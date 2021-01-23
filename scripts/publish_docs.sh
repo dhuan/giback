@@ -20,7 +20,7 @@ then
     touch ./docs/.nojekyll
 fi
 
-LATEST_VERSION=$(git tag | tac | head -n 1)
+LATEST_VERSION=$(git describe --tags --abbrev=0)
 
 FILES_TO_REPLACE=$(grep -rl '%GIBACK_VERSION%' docs | grep '\.html$')
 
