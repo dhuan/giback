@@ -22,7 +22,7 @@ fi
 
 git fetch --tags
 
-LATEST_VERSION=$(git describe --tags --abbrev=0 master)
+LATEST_VERSION=$(git describe --tags --abbrev=0 origin/master)
 
 FILES_TO_REPLACE=$(grep -rl '%GIBACK_VERSION%' docs | grep '\.html$')
 
