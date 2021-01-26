@@ -102,9 +102,9 @@ func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunO
 		log.Fatal("Failed to add.")
 	}
 
-	log.Println(fmt.Sprintf("Committing: %s", unit.Commit_Message))
+	log.Println(fmt.Sprintf("Committing: %s", unit.CommitMessage))
 
-	err = git.Commit(unit.RepositoryPath, unit.Commit_Message, unit.Author_Name, unit.Author_Email, shellRunOptions)
+	err = git.Commit(unit.RepositoryPath, unit.CommitMessage, unit.AuthorName, unit.AuthorEmail, shellRunOptions)
 
 	if err != nil {
 		log.Fatal("Failed to commit.", err)

@@ -1,17 +1,17 @@
 package app
 
 type Config struct {
-	Units []PushUnit
+	Units []PushUnit `yaml:"units"`
 }
 
 type PushUnit struct {
-	Id             string
-	Repository     string
+	Id             string `yaml:"id"`
+	Repository     string `yaml:"repository"`
 	RepositoryPath string
-	Files          []string
-	Exclude        []string
-	Commit_Message string
-	Author_Name    string
-	Author_Email   string
-	Ssh_Key        string
+	Files          []string `yaml:"files"`
+	Exclude        []string `yaml:"exclude"`
+	CommitMessage  string   `yaml:"commit_message"`
+	AuthorName     string   `yaml:"author_name"`
+	AuthorEmail    string   `yaml:"author_email"`
+	Ssh_Key        string   `yaml:"ssh_key"`
 }
