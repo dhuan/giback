@@ -8,3 +8,4 @@ bin/
 release_downloads
 docs/build
 docs/source/_themes
+test/config/giback_config.yml

@@ -11,7 +11,9 @@ import (
 func TestBackupSuccessfully(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
-	output, _ := testutils.RunGiback("my_backup", testutils.RunGibackOptions{})
+	output, _ := testutils.RunGiback("my_backup", testutils.RunGibackOptions{
+		Config: testutils.TestConfig(),
+	})
 
 	testutils.AssertOutput(t, output, []string{
 		"Running unit 'my_backup'.",
@@ -34,7 +36,9 @@ func TestBackupSuccessfully(t *testing.T) {
 func TestBackupSuccessfullyAll(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
-	output, _ := testutils.RunGiback("all", testutils.RunGibackOptions{})
+	output, _ := testutils.RunGiback("all", testutils.RunGibackOptions{
+		Config: testutils.TestConfig(),
+	})
 
 	testutils.AssertOutput(t, output, []string{
 		"Running unit 'my_backup'.",
@@ -70,9 +74,13 @@ func TestBackupSuccessfullyAll(t *testing.T) {
 func TestBackupWithNoChanges(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
-	testutils.RunGiback("my_backup", testutils.RunGibackOptions{})
+	testutils.RunGiback("my_backup", testutils.RunGibackOptions{
+		Config: testutils.TestConfig(),
+	})
 
-	output, _ := testutils.RunGiback("my_backup", testutils.RunGibackOptions{})
+	output, _ := testutils.RunGiback("my_backup", testutils.RunGibackOptions{
+		Config: testutils.TestConfig(),
+	})
 
 	testutils.AssertGitLog(t, "test", []string{
 		"Super Man <superman@example.com> Backing up!",
@@ -96,7 +104,9 @@ func TestBackupWithNoChanges(t *testing.T) {
 func TestBackupSuccessfullyWithIgnoredFiles(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
-	_, err := testutils.RunGiback("my_backup", testutils.RunGibackOptions{})
+	_, err := testutils.RunGiback("my_backup", testutils.RunGibackOptions{
+		Config: testutils.TestConfig(),
+	})
 
 	testutils.AssertHasNoError(t, err)
 
@@ -108,7 +118,9 @@ func TestBackupSuccessfullyWithIgnoredFiles(t *testing.T) {
 		"a_new_file.txt File content.",
 	})
 
-	output, err := testutils.RunGiback("my_backup", testutils.RunGibackOptions{})
+	output, err := testutils.RunGiback("my_backup", testutils.RunGibackOptions{
+		Config: testutils.TestConfig(),
+	})
 
 	testutils.AssertOutput(t, output, []string{
 		"Running unit 'my_backup'.",
@@ -132,7 +144,9 @@ func TestBackupSuccessfullyWithIgnoredFiles(t *testing.T) {
 }
 
 func TestFailRunningUnexistingUnit(t *testing.T) {
-	output, err := testutils.RunGiback("my_unexisting_backup", testutils.RunGibackOptions{})
+	output, err := testutils.RunGiback("my_unexisting_backup", testutils.RunGibackOptions{
+		Config: testutils.TestConfig(),
+	})
 
 	testutils.AssertHasError(t, err)
 
@@ -144,12 +158,18 @@ func TestFailRunningUnexistingUnit(t *testing.T) {
 func TestFailRunningAllWithUnmatchingRepositories(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
-	output, err := testutils.RunGiback("all", testutils.RunGibackOptions{})
+	output, err := testutils.RunGiback("all", testutils.RunGibackOptions{
+		Config: testutils.TestConfig(),
+	})
 
 	testutils.AssertHasNoError(t, err)
 
+	invalidConfig := testutils.TestConfig()
+
+	invalidConfig["units"].([]map[interface{}]interface{})[1]["repository"] = "ssh://git@localhost/srv/git/invalid_repo.git"
+
 	output, err = testutils.RunGiback("all", testutils.RunGibackOptions{
-		ConfigFile: "invalid",
+		Config: invalidConfig,
 	})
 
 	testutils.AssertHasError(t, err)
@@ -162,12 +182,18 @@ func TestFailRunningAllWithUnmatchingRepositories(t *testing.T) {
 func TestFailRunningSingleWithUnmatchingRepositories(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
-	output, err := testutils.RunGiback("all", testutils.RunGibackOptions{})
+	output, err := testutils.RunGiback("all", testutils.RunGibackOptions{
+		Config: testutils.TestConfig(),
+	})
 
 	testutils.AssertHasNoError(t, err)
 
+	invalidConfig := testutils.TestConfig()
+
+	invalidConfig["units"].([]map[interface{}]interface{})[1]["repository"] = "ssh://git@localhost/srv/git/invalid_repo.git"
+
 	output, err = testutils.RunGiback("another_backup", testutils.RunGibackOptions{
-		ConfigFile: "invalid",
+		Config: invalidConfig,
 	})
 
 	testutils.AssertHasError(t, err)
@@ -180,8 +206,12 @@ func TestFailRunningSingleWithUnmatchingRepositories(t *testing.T) {
 func TestFailRunningAllWithInvalidConfigMissingFields(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
+	configWithMissingFields := testutils.TestConfig()
+	delete(configWithMissingFields["units"].([]map[interface{}]interface{})[1], "repository")
+	delete(configWithMissingFields["units"].([]map[interface{}]interface{})[1], "files")
+
 	output, err := testutils.RunGiback("all", testutils.RunGibackOptions{
-		ConfigFile: "invalid_missing_fields",
+		Config: configWithMissingFields,
 	})
 
 	testutils.AssertHasError(t, err)
@@ -197,14 +227,18 @@ func TestFailRunningAllWithInvalidConfigMissingFields(t *testing.T) {
 func TestFailRunningSingleWithInvalidConfigMissingFields(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
+	configWithMissingFields := testutils.TestConfig()
+	delete(configWithMissingFields["units"].([]map[interface{}]interface{})[1], "repository")
+	delete(configWithMissingFields["units"].([]map[interface{}]interface{})[1], "files")
+
 	_, err := testutils.RunGiback("my_backup", testutils.RunGibackOptions{
-		ConfigFile: "invalid_missing_fields",
+		Config: configWithMissingFields,
 	})
 
 	testutils.AssertHasNoError(t, err)
 
 	output, err := testutils.RunGiback("another_backup", testutils.RunGibackOptions{
-		ConfigFile: "invalid_missing_fields",
+		Config: configWithMissingFields,
 	})
 
 	testutils.AssertHasError(t, err)
@@ -219,8 +253,12 @@ func TestFailRunningSingleWithInvalidConfigMissingFields(t *testing.T) {
 func TestBackupSuccessfullyWithCustomKey(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
+	configWithKeys := testutils.TestConfig()
+	configWithKeys["units"].([]map[interface{}]interface{})[0]["ssh_key"] = "{PWD}/test/tmp/id_rsa"
+	configWithKeys["units"].([]map[interface{}]interface{})[1]["ssh_key"] = "{PWD}/test/tmp/id_rsa_invalid"
+
 	output, _ := testutils.RunGiback("my_backup", testutils.RunGibackOptions{
-		ConfigFile: "with_keys",
+		Config: configWithKeys,
 	})
 
 	testutils.AssertOutput(t, output, []string{
@@ -244,8 +282,12 @@ func TestBackupSuccessfullyWithCustomKey(t *testing.T) {
 func TestFailSingleWithCustomKey(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
+	configWithKeys := testutils.TestConfig()
+	configWithKeys["units"].([]map[interface{}]interface{})[0]["ssh_key"] = "{PWD}/test/tmp/id_rsa"
+	configWithKeys["units"].([]map[interface{}]interface{})[1]["ssh_key"] = "{PWD}/test/tmp/id_rsa_invalid"
+
 	output, err := testutils.RunGiback("another_backup", testutils.RunGibackOptions{
-		ConfigFile: "with_keys",
+		Config: configWithKeys,
 	})
 
 	testutils.AssertHasError(t, err)
@@ -259,8 +301,12 @@ func TestFailSingleWithCustomKey(t *testing.T) {
 func TestFailAllWithCustomKey(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
+	configWithKeys := testutils.TestConfig()
+	configWithKeys["units"].([]map[interface{}]interface{})[0]["ssh_key"] = "{PWD}/test/tmp/id_rsa"
+	configWithKeys["units"].([]map[interface{}]interface{})[1]["ssh_key"] = "{PWD}/test/tmp/id_rsa_invalid"
+
 	output, err := testutils.RunGiback("all", testutils.RunGibackOptions{
-		ConfigFile: "with_keys",
+		Config: configWithKeys,
 	})
 
 	testutils.AssertHasError(t, err)

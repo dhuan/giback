@@ -10,6 +10,8 @@ import (
 	"strings"
 	"testing"
 
+	"gopkg.in/yaml.v2"
+
 	"github.com/dhuan/giback/pkg/shell"
 )
 
@@ -35,15 +37,44 @@ func ResetTestEnvironment() {
 	AddFileToBackupFilesFolder(defaultBackupFiles())
 }
 
+func TestConfig() map[string]interface{} {
+	return map[string]interface{}{
+		"units": []map[interface{}]interface{}{
+			map[interface{}]interface{}{
+				"id":         "my_backup",
+				"repository": "ssh://git@localhost/srv/git/test.git",
+				"files": []string{
+					"{PWD}/test/backup_files/*.txt",
+				},
+				"exclude": []string{
+					"{PWD}/test/backup_files/unimportant_file.txt",
+				},
+				"commit_message": "Backing up!",
+				"author_name":    "Super Man",
+				"author_email":   "superman@example.com",
+			},
+			map[interface{}]interface{}{
+				"id":         "another_backup",
+				"repository": "ssh://git@localhost/srv/git/test2.git",
+				"files": []string{
+					"{PWD}/test/backup_files/some_file.txt",
+				},
+				"exclude":        []string{},
+				"commit_message": "Backup.",
+				"author_name":    "Someone",
+				"author_email":   "someone@example.com",
+			},
+		},
+	}
+}
+
 func RunGiback(command string, options RunGibackOptions) ([]byte, error) {
 	workspacePath := "./test/tmp/workspace"
-	configPath := "./test/config/default.yml"
+	configPath := "./test/config/giback_config.yml"
 	workingDir, _ := os.Getwd()
 	gibackRootPath := fmt.Sprintf("%s/..", workingDir)
 
-	if options.ConfigFile != "" {
-		configPath = fmt.Sprintf("./test/config/%s.yml", options.ConfigFile)
-	}
+	writeConfigFile(options.Config)
 
 	commandTranformed := fmt.Sprintf("./bin/giback -w %s -c %s %s", workspacePath, configPath, command)
 
@@ -54,6 +85,22 @@ func RunGiback(command string, options RunGibackOptions) ([]byte, error) {
 	}
 
 	return output, nil
+}
+
+func writeConfigFile(config map[string]interface{}) {
+	yamlResult, err := yaml.Marshal(&config)
+
+	workingDir, _ := os.Getwd()
+	gibackRootPath := fmt.Sprintf("%s/..", workingDir)
+	testConfigPath := fmt.Sprintf("%s/test/config/giback_config.yml", gibackRootPath)
+
+	if err != nil {
+		log.Fatalln("Failed to parse test YAML config.")
+	}
+
+	if err = ioutil.WriteFile(testConfigPath, yamlResult, 0644); err != nil {
+		log.Fatalln("Failed to write giback test config file.")
+	}
 }
 
 func AssertHasError(t *testing.T, err error) {
@@ -145,7 +192,7 @@ func AddFileToBackupFilesFolder(fileDefinitions []string) {
 }
 
 type RunGibackOptions struct {
-	ConfigFile string
+	Config map[string]interface{}
 }
 
 func getGitLog(repositoryFolder string) []string {
