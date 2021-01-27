@@ -303,7 +303,7 @@ func validateAccessSingle(unit app.PushUnit, shellRunOptions shell.RunOptions) (
 }
 
 func modifyShellRunOptionsForUnit(unit app.PushUnit, base shell.RunOptions) shell.RunOptions {
-	if unit.Ssh_Key == "" {
+	if unit.SshKey == "" {
 		return base
 	}
 
@@ -313,7 +313,7 @@ func modifyShellRunOptionsForUnit(unit app.PushUnit, base shell.RunOptions) shel
 		newOptions.Env = make(map[string]string)
 	}
 
-	sshKey := utils.EvaluateStandardVariables(unit.Ssh_Key)
+	sshKey := utils.EvaluateStandardVariables(unit.SshKey)
 
 	newOptions.Env["GIT_SSH_COMMAND"] = fmt.Sprintf("ssh -o StrictHostKeyChecking=no -i %s", sshKey)
 	newOptions.Env["GIT_SSH_VARIANT"] = "ssh"

@@ -13,5 +13,5 @@ type PushUnit struct {
 	CommitMessage  string   `yaml:"commit_message"`
 	AuthorName     string   `yaml:"author_name"`
 	AuthorEmail    string   `yaml:"author_email"`
-	Ssh_Key        string   `yaml:"ssh_key"`
+	SshKey         string   `yaml:"ssh_key"`
 }
