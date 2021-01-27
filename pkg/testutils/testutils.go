@@ -349,3 +349,11 @@ func parseFileDefinition(fileDefinition string) (string, string) {
 
 	return fileName, strings.Join(fileContent, " ")
 }
+
+func ChangeUnitConfigParameter(config map[string]interface{}, unitIndex int, unitField string, value string) {
+	config["units"].([]map[interface{}]interface{})[unitIndex][unitField] = value
+}
+
+func DeleteUnitConfigParameter(config map[string]interface{}, unitIndex int, unitField string) {
+	delete(config["units"].([]map[interface{}]interface{})[unitIndex], unitField)
+}

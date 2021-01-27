@@ -166,7 +166,7 @@ func TestFailRunningAllWithUnmatchingRepositories(t *testing.T) {
 
 	invalidConfig := testutils.TestConfig()
 
-	invalidConfig["units"].([]map[interface{}]interface{})[1]["repository"] = "ssh://git@localhost/srv/git/invalid_repo.git"
+	testutils.ChangeUnitConfigParameter(invalidConfig, 1, "repository", "ssh://git@localhost/srv/git/invalid_repo.git")
 
 	output, err = testutils.RunGiback("all", testutils.RunGibackOptions{
 		Config: invalidConfig,
@@ -190,7 +190,7 @@ func TestFailRunningSingleWithUnmatchingRepositories(t *testing.T) {
 
 	invalidConfig := testutils.TestConfig()
 
-	invalidConfig["units"].([]map[interface{}]interface{})[1]["repository"] = "ssh://git@localhost/srv/git/invalid_repo.git"
+	testutils.ChangeUnitConfigParameter(invalidConfig, 1, "repository", "ssh://git@localhost/srv/git/invalid_repo.git")
 
 	output, err = testutils.RunGiback("another_backup", testutils.RunGibackOptions{
 		Config: invalidConfig,
@@ -207,8 +207,8 @@ func TestFailRunningAllWithInvalidConfigMissingFields(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
 	configWithMissingFields := testutils.TestConfig()
-	delete(configWithMissingFields["units"].([]map[interface{}]interface{})[1], "repository")
-	delete(configWithMissingFields["units"].([]map[interface{}]interface{})[1], "files")
+	testutils.DeleteUnitConfigParameter(configWithMissingFields, 1, "repository")
+	testutils.DeleteUnitConfigParameter(configWithMissingFields, 1, "files")
 
 	output, err := testutils.RunGiback("all", testutils.RunGibackOptions{
 		Config: configWithMissingFields,
@@ -228,8 +228,8 @@ func TestFailRunningSingleWithInvalidConfigMissingFields(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
 	configWithMissingFields := testutils.TestConfig()
-	delete(configWithMissingFields["units"].([]map[interface{}]interface{})[1], "repository")
-	delete(configWithMissingFields["units"].([]map[interface{}]interface{})[1], "files")
+	testutils.DeleteUnitConfigParameter(configWithMissingFields, 1, "repository")
+	testutils.DeleteUnitConfigParameter(configWithMissingFields, 1, "files")
 
 	_, err := testutils.RunGiback("my_backup", testutils.RunGibackOptions{
 		Config: configWithMissingFields,
@@ -254,8 +254,8 @@ func TestBackupSuccessfullyWithCustomKey(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
 	configWithKeys := testutils.TestConfig()
-	configWithKeys["units"].([]map[interface{}]interface{})[0]["ssh_key"] = "{PWD}/test/tmp/id_rsa"
-	configWithKeys["units"].([]map[interface{}]interface{})[1]["ssh_key"] = "{PWD}/test/tmp/id_rsa_invalid"
+	testutils.ChangeUnitConfigParameter(configWithKeys, 0, "ssh_key", "{PWD}/test/tmp/id_rsa")
+	testutils.ChangeUnitConfigParameter(configWithKeys, 1, "ssh_key", "{PWD}/test/tmp/id_rsa_invalid")
 
 	output, _ := testutils.RunGiback("my_backup", testutils.RunGibackOptions{
 		Config: configWithKeys,
@@ -283,8 +283,8 @@ func TestFailSingleWithCustomKey(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
 	configWithKeys := testutils.TestConfig()
-	configWithKeys["units"].([]map[interface{}]interface{})[0]["ssh_key"] = "{PWD}/test/tmp/id_rsa"
-	configWithKeys["units"].([]map[interface{}]interface{})[1]["ssh_key"] = "{PWD}/test/tmp/id_rsa_invalid"
+	testutils.ChangeUnitConfigParameter(configWithKeys, 0, "ssh_key", "{PWD}/test/tmp/id_rsa")
+	testutils.ChangeUnitConfigParameter(configWithKeys, 1, "ssh_key", "{PWD}/test/tmp/id_rsa_invalid")
 
 	output, err := testutils.RunGiback("another_backup", testutils.RunGibackOptions{
 		Config: configWithKeys,
@@ -302,8 +302,8 @@ func TestFailAllWithCustomKey(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
 	configWithKeys := testutils.TestConfig()
-	configWithKeys["units"].([]map[interface{}]interface{})[0]["ssh_key"] = "{PWD}/test/tmp/id_rsa"
-	configWithKeys["units"].([]map[interface{}]interface{})[1]["ssh_key"] = "{PWD}/test/tmp/id_rsa_invalid"
+	testutils.ChangeUnitConfigParameter(configWithKeys, 0, "ssh_key", "{PWD}/test/tmp/id_rsa")
+	testutils.ChangeUnitConfigParameter(configWithKeys, 1, "ssh_key", "{PWD}/test/tmp/id_rsa_invalid")
 
 	output, err := testutils.RunGiback("all", testutils.RunGibackOptions{
 		Config: configWithKeys,
