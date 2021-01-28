@@ -61,7 +61,10 @@ func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunO
 		log.Println(fmt.Sprintf("%s", files[i]))
 	}
 
-	gibackfs.Copy(files, unit.RepositoryPath)
+	if err = gibackfs.Copy(files, unit.RepositoryPath); err != nil {
+		log.Println("An error occurred while copying the backup files.")
+		log.Fatalln(err)
+	}
 
 	log.Println(fmt.Sprintf("Files copied."))
 
