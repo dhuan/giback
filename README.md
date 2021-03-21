@@ -2,52 +2,26 @@
 
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/dhuan/giback/Go?logo=github&style=for-the-badge)](https://github.com/dhuan/giback/actions?query=workflow%3AGo)
 
-## Usage
-
-Giback relies on a configuration file at your home folder in order to know which files to backup and to what repositories:
+Giback is a command-line utility for easily backing up your files to git repositories. After setting up a configuration file listing your desired files, and the respective target repository, you can then at any time command giback to backup your files.
 
 ```yml
-# /home/user/giback.yml
-units:
-- id: my_backup
-  repository: ssh://git@github.com:some_user/some_repository.git
-  author_name: Someone
-  author_email: someone@example.com
-  commit_message: "Backing up!"
-  ssh_key: /path/to/a/ssh_key/id_rsa
-  files:
-  - "/path/to/some/folder/*.txt"
-  - "/path/to/another/folder/*.jpg"
-  exclude:
-  - "/path/to/some/folder/unwanted_file.txt"
-- id: another_backup
-  repository: ssh://git@github.com:some_user/some_repository.git
-  author_name: Someone
-  author_email: someone@example.com
-  commit_message: "Backing up!"
-  ssh_key: /path/to/a/ssh_key/id_rsa
-  files:
-  - "/path/to/some/folder/*.txt"
-  - "/path/to/another/folder/*.jpg"
-  exclude:
-  - "/path/to/some/folder/unwanted_file.txt"
+$ giback all
+Running unit 'my_backup'.
+Pulling git changes.
+Identifying files...
+/home/my_user/Documents/personal_notes.txt
+/home/my_user/Documents/work.org
+/home/my_user/photos/trip.jpg
+Files copied.
+Committing: Backing up with Giback!
+Pushing...
+Done!
 ```
 
-In addition, a "workspace" folder should exist at `/home/user/.giback`. A workspace is a folder Giback uses to clone and maintain the repositories your files will be backed up to.
+## Resources
 
-With the these requirements addressed, you could then command Giback to backup all units:
-
-```sh
-giback all
-```
-
-If you wanted to backup a specific unit:
-
-```sh
-giback my_backup
-```
-
-Refer to the [documentation distributed with the source](./giback.txt) to understand more how to use Giback.
+- Manual: https://dhuan.github.io/giback
+- Downloads: https://github.com/dhuan/giback/releases
 
 ## Installation from source
 
