@@ -1,6 +1,11 @@
 set -x
 set -e
 
+cat <<EOF >> /etc/gitconfig
+[safe]
+    directory = *
+EOF
+
 cat /giback/test/tmp/id_rsa.pub >> /home/git/.ssh/authorized_keys
 
 rm -rf /srv/git/test*
