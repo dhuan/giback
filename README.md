@@ -1,6 +1,7 @@
 # Giback - Backup your files to Git
 
 [![Build Status](https://github.com/dhuan/giback/actions/workflows/go.yml/badge.svg)](https://github.com/dhuan/giback/actions/workflows/go.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/dhuan/giback)](https://goreportcard.com/report/github.com/dhuan/giback)
 
 Giback is a command-line utility for easily backing up your files to git repositories. After setting up a configuration file listing your desired files, and the respective target repository, you can then at any time command giback to backup your files.
 
