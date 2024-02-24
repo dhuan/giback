@@ -6,7 +6,7 @@ echo $GIBACK_VERSION
 
 gh release create "$GIBACK_VERSION" -t "$GIBACK_VERSION"
 
-RELEASE_FILES=$(ls ./release_downloads/*.zip)
+RELEASE_FILES=$(ls ./release_downloads/*.tgz)
 
 for RELEASE_FILE in $RELEASE_FILES
 do

@@ -40,5 +40,8 @@ TARGET_FOLDERS=$(ls ./release_downloads)
 
 for TARGET_FOLDER in ${TARGET_FOLDERS[@]}
 do
-    zip "./release_downloads/giback_${GIBACK_VERSION}_${TARGET_FOLDER}.zip" -j ./release_downloads/"${TARGET_FOLDER}"/*
+    (
+        cd "./release_downloads/${TARGET_FOLDER}"
+        tar czv ./* > "./release_downloads/giback_${GIBACK_VERSION}_${TARGET_FOLDER}.tgz"
+    )
 done
