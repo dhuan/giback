@@ -14,8 +14,6 @@ rm -rf ./release_downloads
 
 mkdir ./release_downloads
 
-make docs_build_pdf
-
 for TARGET in "${TARGETS[@]}"
 do
     GOOS=$(echo $TARGET | cut -d "," -f 1)
@@ -31,7 +29,6 @@ do
 
     cp ./README.md $TARGET_PATH/.
     cp ./LICENSE $TARGET_PATH/.
-    cp ./docs/build/latex/*.pdf $TARGET_PATH/.
 
     GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "-X main.version=$GIBACK_VERSION" -o $TARGET_PATH/giback
 done
