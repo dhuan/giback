@@ -10,6 +10,3 @@ tests:
 
 docs_build: 
 	bash ./scripts/docs_build.sh
-
-docs_build_pdf:
-	bash ./scripts/docs_build_pdf.sh

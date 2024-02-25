@@ -19,7 +19,8 @@ jobs:
 
     - name: Build sphinx documentation
       run: |
-          make docs_build_pdf
+          sudo apt update --yes
+          sudo apt install --yes latexmk python3-sphinx texlive-formats-extra
           make docs_build
           bash scripts/publish_docs.sh
       env:

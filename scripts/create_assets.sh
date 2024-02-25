@@ -14,8 +14,6 @@ rm -rf ./release_downloads
 
 mkdir ./release_downloads
 
-make docs_build_pdf
-
 for TARGET in "${TARGETS[@]}"
 do
     GOOS=$(echo $TARGET | cut -d "," -f 1)
