@@ -42,6 +42,6 @@ for TARGET_FOLDER in ${TARGET_FOLDERS[@]}
 do
     (
         cd "./release_downloads/${TARGET_FOLDER}"
-        tar czv ./* > "./giback_${GIBACK_VERSION}_${TARGET_FOLDER}.tgz"
+        tar czv ./* > "../giback_${GIBACK_VERSION}_${TARGET_FOLDER}.tgz"
     )
 done
