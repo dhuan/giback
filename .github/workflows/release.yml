@@ -28,4 +28,4 @@ jobs:
           make docs_build_pdf
           bash scripts/create_release.sh
       env:
-          GH_KEY: ${{ secrets.GH_KEY }}
+          GH_KEY: ${{ secrets.GITHUB_TOKEN }}

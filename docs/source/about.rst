@@ -24,8 +24,8 @@ to backup your files.
 Get it now
 ----------
 
-- `Download Giback for Linux <https://github.com/dhuan/giback/releases/download/%GIBACK_VERSION%/giback_%GIBACK_VERSION%_linux-386.zip>`_
-- `Download Giback for macOS <https://github.com/dhuan/giback/releases/download/%GIBACK_VERSION%/giback_%GIBACK_VERSION%_darwin-amd64.zip>`_
+- `Download Giback for Linux <https://github.com/dhuan/giback/releases/download/%GIBACK_VERSION%/giback_%GIBACK_VERSION%_linux-386.tgz>`_
+- `Download Giback for macOS <https://github.com/dhuan/giback/releases/download/%GIBACK_VERSION%/giback_%GIBACK_VERSION%_darwin-amd64.tgz>`_
 
 .. Note::
 
