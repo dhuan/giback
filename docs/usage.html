@@ -1,10 +1,11 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Usage and Configuration &mdash; Giback  documentation</title>
@@ -13,6 +14,9 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/giback.css" type="text/css" />
 
   
   
@@ -25,20 +29,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -92,7 +87,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="about.html">Giback: Backup your files to git</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -113,7 +108,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="releases.html">Releases</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Development:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="automated_tests.html">Automated Tests</a></li>
 </ul>
@@ -181,105 +176,101 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="usage-and-configuration">
+  <section id="usage-and-configuration">
 <h1>Usage and Configuration<a class="headerlink" href="#usage-and-configuration" title="Permalink to this headline">¶</a></h1>
 <p>Giback needs a configuration file describing what files you want to backup and
 to which repository they should be pushed to. Below is an example of a
-configuration file that defines two Backup Units, <code class="docutils literal"><span class="pre">notes</span></code> and <code class="docutils literal"><span class="pre">photos</span></code>:</p>
-<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">units</span><span class="p p-Indicator">:</span>
-<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">id</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">notes</span>
-  <span class="l l-Scalar l-Scalar-Plain">repository</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ssh://git@github.com:my_user/my_personal_notes.git</span>
-  <span class="l l-Scalar l-Scalar-Plain">author_name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">John Doe</span>
-  <span class="l l-Scalar l-Scalar-Plain">author_email</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">johndoe@example.com</span>
-  <span class="l l-Scalar l-Scalar-Plain">commit_message</span><span class="p p-Indicator">:</span> <span class="s">&#39;Backing</span><span class="nv"> </span><span class="s">up</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">Giback.&#39;</span>
-  <span class="l l-Scalar l-Scalar-Plain">files</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="s">&quot;/home/john_doe/Documents/*.txt&quot;</span>
-  <span class="p p-Indicator">-</span> <span class="s">&quot;/home/john_doe/Documents/*.org&quot;</span>
-  <span class="l l-Scalar l-Scalar-Plain">exclude</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="s">&quot;/home/john_doe/Documents/unimportant_notes.txt&quot;</span>
-<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">id</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">photos</span>
-  <span class="l l-Scalar l-Scalar-Plain">repository</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ssh://git@github.com:my_user/photos.git</span>
-  <span class="l l-Scalar l-Scalar-Plain">author_name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">John Doe</span>
-  <span class="l l-Scalar l-Scalar-Plain">author_email</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">johndoe@example.com</span>
-  <span class="l l-Scalar l-Scalar-Plain">commit_message</span><span class="p p-Indicator">:</span> <span class="s">&#39;Backing</span><span class="nv"> </span><span class="s">up</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">Giback.&#39;</span>
-  <span class="l l-Scalar l-Scalar-Plain">files</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="s">&quot;/home/john_doe/Documents/*.jpg&quot;</span>
-  <span class="p p-Indicator">-</span> <span class="s">&quot;/home/john_doe/Documents/*.png&quot;</span>
+configuration file that defines two Backup Units, <code class="docutils literal notranslate"><span class="pre">notes</span></code> and <code class="docutils literal notranslate"><span class="pre">photos</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">units</span><span class="p">:</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notes</span><span class="w"></span>
+<span class="w">  </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssh://git@github.com:my_user/my_personal_notes.git</span><span class="w"></span>
+<span class="w">  </span><span class="nt">author_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">John Doe</span><span class="w"></span>
+<span class="w">  </span><span class="nt">author_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">johndoe@example.com</span><span class="w"></span>
+<span class="w">  </span><span class="nt">commit_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Backing</span><span class="nv"> </span><span class="s">up</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">Giback.&#39;</span><span class="w"></span>
+<span class="w">  </span><span class="nt">files</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/home/john_doe/Documents/*.txt&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/home/john_doe/Documents/*.org&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="nt">exclude</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/home/john_doe/Documents/unimportant_notes.txt&quot;</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">photos</span><span class="w"></span>
+<span class="w">  </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssh://git@github.com:my_user/photos.git</span><span class="w"></span>
+<span class="w">  </span><span class="nt">author_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">John Doe</span><span class="w"></span>
+<span class="w">  </span><span class="nt">author_email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">johndoe@example.com</span><span class="w"></span>
+<span class="w">  </span><span class="nt">commit_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Backing</span><span class="nv"> </span><span class="s">up</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">Giback.&#39;</span><span class="w"></span>
+<span class="w">  </span><span class="nt">files</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/home/john_doe/Documents/*.jpg&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/home/john_doe/Documents/*.png&quot;</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Given these two Backup Units defined above, we can just command Giback at any
 time to backup everything:</p>
-<div class="highlight-sh"><div class="highlight"><pre><span></span>$ giback all
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ giback all
 </pre></div>
 </div>
-<p>In case we wanted to backup a single Backup Unit, say <code class="docutils literal"><span class="pre">notes</span></code>, instead of
+<p>In case we wanted to backup a single Backup Unit, say <code class="docutils literal notranslate"><span class="pre">notes</span></code>, instead of
 all:</p>
-<div class="highlight-sh"><div class="highlight"><pre><span></span>$ giback notes
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ giback notes
 </pre></div>
 </div>
-<div class="section" id="backup-units-configuration-parameters">
+<section id="backup-units-configuration-parameters">
 <h2>Backup Units’ Configuration Parameters<a class="headerlink" href="#backup-units-configuration-parameters" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id">
+<section id="id">
 <h3>id<a class="headerlink" href="#id" title="Permalink to this headline">¶</a></h3>
 <p>An ID that identifies a Backup Unit.</p>
-</div>
-<div class="section" id="repository">
+</section>
+<section id="repository">
 <h3>repository<a class="headerlink" href="#repository" title="Permalink to this headline">¶</a></h3>
 <p>The Git repository to which your backup files will be pushed.</p>
-</div>
-<div class="section" id="author-name">
+</section>
+<section id="author-name">
 <h3>author_name<a class="headerlink" href="#author-name" title="Permalink to this headline">¶</a></h3>
 <p>The author’s name to which commits will be associated.</p>
-</div>
-<div class="section" id="author-email">
+</section>
+<section id="author-email">
 <h3>author_email<a class="headerlink" href="#author-email" title="Permalink to this headline">¶</a></h3>
 <p>The author’s email.</p>
-</div>
-<div class="section" id="commit-message">
+</section>
+<section id="commit-message">
 <h3>commit_message<a class="headerlink" href="#commit-message" title="Permalink to this headline">¶</a></h3>
 <p>A commit message.</p>
-</div>
-<div class="section" id="files">
+</section>
+<section id="files">
 <h3>files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h3>
 <p>A list of files that will pushed to your backup repository. Absolute
 paths should be used. Glob Patterns are supported when you want to backup
 multiple files in the same directory or that have the same extension.</p>
-</div>
-<div class="section" id="exclude">
+</section>
+<section id="exclude">
 <h3>exclude<a class="headerlink" href="#exclude" title="Permalink to this headline">¶</a></h3>
 <p>Like <cite>files</cite>, this takes a list of files, only that those files
 will be ignored and not pushed to your backup repository.</p>
-</div>
-<div class="section" id="ssh-key">
+</section>
+<section id="ssh-key">
 <h3>ssh_key<a class="headerlink" href="#ssh-key" title="Permalink to this headline">¶</a></h3>
 <p>Absolute path to a SSH key. If this paramter is not defined, your user’s
 default SSH key will be used (like git normally does).</p>
-</div>
-</div>
-<div class="section" id="command-line-options">
+</section>
+</section>
+<section id="command-line-options">
 <h2>Command Line Options<a class="headerlink" href="#command-line-options" title="Permalink to this headline">¶</a></h2>
-<table class="docutils option-list" frame="void" rules="none">
-<col class="option" />
-<col class="description" />
-<tbody valign="top">
-<tr><td class="option-group">
-<kbd><span class="option">-w</span></kbd></td>
-<td>Path to a workspace. Use it if you don’t want your workspace to be
-“/home/user/.giback”. All repositories will be kept there.</td></tr>
-<tr><td class="option-group">
-<kbd><span class="option">-c</span></kbd></td>
-<td>Path to a configuration file. Use it if you want a configuration file
-that’s not located at the default path “/home/user/.giback.yml”.</td></tr>
-<tr><td class="option-group">
-<kbd><span class="option">-v</span></kbd></td>
-<td>By default giback prints useful log messages describing its operations as
+<dl class="option-list">
+<dt><kbd><span class="option">-w</span></kbd></dt>
+<dd><p>Path to a workspace. Use it if you don’t want your workspace to be
+“/home/user/.giback”. All repositories will be kept there.</p>
+</dd>
+<dt><kbd><span class="option">-c</span></kbd></dt>
+<dd><p>Path to a configuration file. Use it if you want a configuration file
+that’s not located at the default path “/home/user/.giback.yml”.</p>
+</dd>
+<dt><kbd><span class="option">-v</span></kbd></dt>
+<dd><p>By default giback prints useful log messages describing its operations as
 it runs. It doesn’t however show the output of the git command it runs.
 With this flag all git output will be visible. This is specifically useful
-for debugging.</td></tr>
-</tbody>
-</table>
-</div>
-</div>
+for debugging.</p>
+</dd>
+</dl>
+</section>
+</section>
 
 
            </div>
