@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"log"
 
@@ -47,5 +46,5 @@ func getUnitById(unitId string, units []app.PushUnit) (app.PushUnit, error) {
 		}
 	}
 
-	return app.PushUnit{}, errors.New(fmt.Sprintf("Could not find unit with ID '%s'.", unitId))
+	return app.PushUnit{}, fmt.Errorf("Could not find unit with ID '%s'.", unitId)
 }

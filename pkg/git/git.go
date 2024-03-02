@@ -18,11 +18,7 @@ func CheckAccess(workspace string, repository string, shellRunOptions shell.RunO
 
 	_, runErr := shell.Run(workspace, command, shellRunOptions)
 
-	if runErr != nil {
-		return false
-	}
-
-	return true
+	return runErr == nil
 }
 
 func Clone(workspace string, repositoryPath string, saveAs string, shellRunOptions shell.RunOptions) error {
@@ -56,7 +52,7 @@ func Pull(repositoryPath string, shellRunOptions shell.RunOptions) error {
 func Status(repositoryPath string, shellRunOptions shell.RunOptions) []GitStatusResult {
 	var result []GitStatusResult
 
-	command := fmt.Sprintf("git status --short")
+	command := "git status --short"
 
 	statusOutput, _ := shell.Run(repositoryPath, command, shellRunOptions)
 

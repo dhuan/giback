@@ -44,11 +44,11 @@ func BuildContext(c *cli.Context) (Context, error) {
 	}
 
 	if !fileExists(configFilePath) {
-		log.Fatal(fmt.Sprintf("Config file does not exist:  %s", configFilePath))
+		log.Fatalf("Config file does not exist:  %s", configFilePath)
 	}
 
 	if !folderExists(workspacePath) {
-		log.Fatal(fmt.Sprintf("Workspace folder does not exist:  %s", workspacePath))
+		log.Fatalf("Workspace folder does not exist:  %s", workspacePath)
 	}
 
 	return Context{configFilePath, workspacePath, verbose}, nil

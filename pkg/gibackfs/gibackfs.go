@@ -44,21 +44,13 @@ func GetUserConfig(appContext app.Context) (app.Config, string, error) {
 func FileExists(path string) bool {
 	_, err := os.Stat(path)
 
-	if err != nil {
-		return false
-	}
-
-	return true
+	return err == nil
 }
 
 func FolderExists(path string) bool {
 	_, err := os.Stat(path)
 
-	if err != nil {
-		return false
-	}
-
-	return true
+	return err == nil
 }
 
 func ScanDir(path string) []string {

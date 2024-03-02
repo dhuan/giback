@@ -18,7 +18,7 @@ import (
 func runUnit(unit app.PushUnit, workspacePath string, shellRunOptions shell.RunOptions) error {
 	var err error
 
-	log.Println(fmt.Sprintf("Running unit '%s'.", unit.Id))
+	log.Printf("Running unit '%s'.\n", unit.Id)
 
 	hasAccess := git.CheckAccess(workspacePath, unit.Repository, shellRunOptions)
 

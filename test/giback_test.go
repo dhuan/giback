@@ -118,7 +118,7 @@ func TestBackupSuccessfullyWithIgnoredFiles(t *testing.T) {
 		"a_new_file.txt File content.",
 	})
 
-	output, err := testutils.RunGiback("my_backup", testutils.RunGibackOptions{
+	output, _ := testutils.RunGiback("my_backup", testutils.RunGibackOptions{
 		Config: testutils.TestConfig(),
 	})
 
@@ -158,7 +158,7 @@ func TestFailRunningUnexistingUnit(t *testing.T) {
 func TestFailRunningAllWithUnmatchingRepositories(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
-	output, err := testutils.RunGiback("all", testutils.RunGibackOptions{
+	_, err := testutils.RunGiback("all", testutils.RunGibackOptions{
 		Config: testutils.TestConfig(),
 	})
 
@@ -168,7 +168,7 @@ func TestFailRunningAllWithUnmatchingRepositories(t *testing.T) {
 
 	testutils.ChangeUnitConfigParameter(invalidConfig, 1, "repository", "ssh://git@localhost/srv/git/invalid_repo.git")
 
-	output, err = testutils.RunGiback("all", testutils.RunGibackOptions{
+	output, err := testutils.RunGiback("all", testutils.RunGibackOptions{
 		Config: invalidConfig,
 	})
 
@@ -182,7 +182,7 @@ func TestFailRunningAllWithUnmatchingRepositories(t *testing.T) {
 func TestFailRunningSingleWithUnmatchingRepositories(t *testing.T) {
 	testutils.ResetTestEnvironment()
 
-	output, err := testutils.RunGiback("all", testutils.RunGibackOptions{
+	_, err := testutils.RunGiback("all", testutils.RunGibackOptions{
 		Config: testutils.TestConfig(),
 	})
 
@@ -192,7 +192,7 @@ func TestFailRunningSingleWithUnmatchingRepositories(t *testing.T) {
 
 	testutils.ChangeUnitConfigParameter(invalidConfig, 1, "repository", "ssh://git@localhost/srv/git/invalid_repo.git")
 
-	output, err = testutils.RunGiback("another_backup", testutils.RunGibackOptions{
+	output, err := testutils.RunGiback("another_backup", testutils.RunGibackOptions{
 		Config: invalidConfig,
 	})
 
