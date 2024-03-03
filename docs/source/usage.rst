@@ -42,7 +42,7 @@ all:
     $ giback notes
 
 Backup Units' Configuration Parameters
--------------------------------
+--------------------------------------
 
 id
 ^^
