@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to giback’s documentation! &mdash; giback  documentation</title>
+  <title>Giback: Backup your files to git &mdash; giback  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=895fd547" />
@@ -20,10 +20,11 @@
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
-    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="author" title="About these documents" href="#" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Giback: Backup your files to git" href="about.html" /> 
+    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="prev" title="Welcome to giback’s documentation!" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -34,7 +35,7 @@
 
           
           
-          <a href="#" class="icon icon-home">
+          <a href="index.html" class="icon icon-home">
             giback
           </a>
 <div role="search">
@@ -46,8 +47,12 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="about.html">Giback: Backup your files to git</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Giback: Backup your files to git</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#get-it-now">Get it now</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#resources">Resources</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage and Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="releases.html">Releases</a></li>
@@ -63,17 +68,17 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">giback</a>
+          <a href="index.html">giback</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Welcome to giback’s documentation!</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Giback: Backup your files to git</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/about.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -81,50 +86,52 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="welcome-to-giback-s-documentation">
-<h1>Welcome to giback’s documentation!<a class="headerlink" href="#welcome-to-giback-s-documentation" title="Link to this heading"></a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="about.html">Giback: Backup your files to git</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="about.html#get-it-now">Get it now</a></li>
-<li class="toctree-l2"><a class="reference internal" href="about.html#resources">Resources</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#downloading-the-binaries-directly">Downloading the binaries directly</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#from-source">From source</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage and Configuration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#backup-units-configuration-parameters">Backup Units’ Configuration Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#command-line-options">Command Line Options</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="releases.html">Releases</a></li>
-</ul>
+  <section id="giback-backup-your-files-to-git">
+<h1>Giback: Backup your files to git<a class="headerlink" href="#giback-backup-your-files-to-git" title="Link to this heading"></a></h1>
+<p>Giback is a command-line utility for easily backing up your files to git
+repositories. After setting up a configuration file listing your desired files,
+and the respective target repository, you can then at any time command giback
+to backup your files.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>giback<span class="w"> </span>all
+Running<span class="w"> </span>unit<span class="w"> </span><span class="s1">&#39;my_backup&#39;</span>.
+Pulling<span class="w"> </span>git<span class="w"> </span>changes.
+Identifying<span class="w"> </span>files...
+/home/john_doe/Documents/personal_notes.txt
+/home/john_doe/Documents/work.org
+/home/john_doe/photos/trip.jpg
+Files<span class="w"> </span>copied.
+Committing:<span class="w"> </span>Backing<span class="w"> </span>up<span class="w"> </span>with<span class="w"> </span>Giback!
+Pushing...
+Done!
+</pre></div>
 </div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="automated_tests.html">Automated Tests</a></li>
+<section id="get-it-now">
+<h2>Get it now<a class="headerlink" href="#get-it-now" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/dhuan/giback/releases/download/v0.1.1/giback_v0.1.1_linux-386.tgz">Download Giback for Linux</a></p></li>
+<li><p><a class="reference external" href="https://github.com/dhuan/giback/releases/download/v0.1.1/giback_v0.1.1_darwin-amd64.tgz">Download Giback for macOS</a></p></li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For other installation methods, <a class="reference external" href="/installation">check the installation manual.</a></p>
 </div>
 </section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
+<section id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+<li><p>Homepage/Manual: <a class="reference external" href="https://dhuan.github.io/giback">https://dhuan.github.io/giback</a></p></li>
+<li><p>Downloads: <a class="reference external" href="https://github.com/dhuan/giback/releases">https://github.com/dhuan/giback/releases</a></p></li>
+<li><p>Source code/Git URL: git://github.com/dhuan/giback.git</p></li>
 </ul>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="about.html" class="btn btn-neutral float-right" title="Giback: Backup your files to git" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to giback’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
