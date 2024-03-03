@@ -1,10 +1,10 @@
-Giback: Backup your files to git
-================================
-
 .. giback documentation master file, created by
-   sphinx-quickstart on Thu Dec 24 14:50:06 2020.
+   sphinx-quickstart on Sun Mar  3 12:08:40 2024.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
+
+Welcome to giback's documentation!
+==================================
 
 .. toctree::
    :maxdepth: 2
@@ -13,7 +13,6 @@ Giback: Backup your files to git
    about
    installation
    usage
-   configuration
    releases
 
 .. toctree::
