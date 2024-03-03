@@ -2,7 +2,9 @@ name: Publish Docs
 
 on:                                                                                                                                                           
   push:                                                                                                                                                       
-    paths:                                                                                                                                                    
+    branches:
+      - master
+    paths:
       - '**.rst'
       - '.github/workflows/docs.yml'
 
