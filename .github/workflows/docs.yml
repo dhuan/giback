@@ -4,6 +4,7 @@ on:
   push:                                                                                                                                                       
     branches:
       - master
+      - docs_add_changelog_2
 
 jobs:
   publish_docs:
@@ -17,7 +18,7 @@ jobs:
     - name: Build sphinx documentation
       run: |
           sudo apt update --yes
-          sudo apt install --yes latexmk python3 python3-pip texlive-formats-extra
+          sudo apt install --yes latexmk python3 python3-pip texlive-formats-extra pandoc
           pip install -U sphinx==7.2.6
           pip install -U sphinx_rtd_theme==2.0.0
           make docs_build
