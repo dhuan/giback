@@ -85,7 +85,7 @@ will be ignored and not pushed to your backup repository.
 ssh_key
 ^^^^^^^
 
-Absolute path to a SSH key. If this paramter is not defined, your user's
+Absolute path to a SSH key. If this parameter is not defined, your user's
 default SSH key will be used (like git normally does).
 
 Command Line Options
