@@ -3,7 +3,7 @@ module github.com/dhuan/giback
 go 1.18
 
 require (
-	github.com/urfave/cli/v2 v2.27.2
+	github.com/urfave/cli/v2 v2.27.4
 	gopkg.in/yaml.v2 v2.4.0
 )
 
